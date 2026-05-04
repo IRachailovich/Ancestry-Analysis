@@ -1,0 +1,414 @@
+{
+  "datasets": {
+    "1000genomes": {
+      "displayName": "1000 Genomes",
+      "labelCounts": {
+        "Admixed_American": 347,
+        "African": 661,
+        "East_Asian": 504,
+        "European": 503,
+        "South_Asian": 489
+      },
+      "labelKind": "super_population",
+      "populationCounts": {
+        "ACB": 96,
+        "ASW": 61,
+        "BEB": 86,
+        "CDX": 93,
+        "CEU": 99,
+        "CHB": 103,
+        "CHS": 105,
+        "CLM": 94,
+        "ESN": 99,
+        "FIN": 99,
+        "GBR": 91,
+        "GIH": 103,
+        "GWD": 113,
+        "IBS": 107,
+        "ITU": 102,
+        "JPT": 104,
+        "KHV": 99,
+        "LWK": 99,
+        "MSL": 85,
+        "MXL": 64,
+        "PEL": 85,
+        "PJL": 96,
+        "PUR": 104,
+        "STU": 102,
+        "TSI": 107,
+        "YRI": 108
+      },
+      "regionCounts": {
+        "AFR": 661,
+        "AMR": 347,
+        "EAS": 504,
+        "EUR": 503,
+        "SAS": 489
+      },
+      "sampleCount": 2504
+    },
+    "hgdp": {
+      "displayName": "HGDP",
+      "labelCounts": {
+        "Caucasus": 16,
+        "Central_African": 35,
+        "Central_Asian": 29,
+        "East_African": 11,
+        "East_Asian": 189,
+        "Eastern_European": 25,
+        "Greater_Iranian": 98,
+        "Indigenous_American": 61,
+        "Middle_Eastern": 134,
+        "North_African": 27,
+        "Northeast_Asian": 9,
+        "Oceanian": 28,
+        "Siberian": 25,
+        "South_Asian": 70,
+        "Southern_African": 8,
+        "Southern_African_Khoisan": 6,
+        "Southern_European": 48,
+        "West_African": 44,
+        "Western_European": 66
+      },
+      "labelKind": "general",
+      "populationCounts": {
+        "Adygei": 16,
+        "Balochi": 24,
+        "BantuKenya": 11,
+        "BantuSouthAfrica": 8,
+        "Basque": 23,
+        "Bedouin": 46,
+        "BergamoItalian": 12,
+        "Biaka": 22,
+        "Bougainville": 11,
+        "Brahui": 25,
+        "Burusho": 24,
+        "Cambodian": 9,
+        "Colombian": 7,
+        "Dai": 9,
+        "Daur": 9,
+        "Druze": 42,
+        "French": 28,
+        "Han": 33,
+        "Hazara": 19,
+        "Hezhen": 9,
+        "Japanese": 27,
+        "Kalash": 22,
+        "Karitiana": 12,
+        "Lahu": 8,
+        "Makrani": 25,
+        "Mandenka": 22,
+        "Maya": 21,
+        "Mbuti": 13,
+        "Miao": 10,
+        "Mongolian": 9,
+        "Mozabite": 27,
+        "Naxi": 8,
+        "NorthernHan": 10,
+        "Orcadian": 15,
+        "Oroqen": 9,
+        "Palestinian": 46,
+        "PapuanHighlands": 9,
+        "PapuanSepik": 8,
+        "Pathan": 24,
+        "Pima": 13,
+        "Russian": 25,
+        "San": 6,
+        "Sardinian": 28,
+        "She": 10,
+        "Sindhi": 24,
+        "Surui": 8,
+        "Tu": 10,
+        "Tujia": 9,
+        "Tuscan": 8,
+        "Uygur": 10,
+        "Xibo": 9,
+        "Yakut": 25,
+        "Yi": 10,
+        "Yoruba": 22
+      },
+      "regionCounts": {
+        "AFRICA": 104,
+        "AMERICA": 61,
+        "CENTRAL_SOUTH_ASIA": 197,
+        "EAST_ASIA": 223,
+        "EUROPE": 155,
+        "MIDDLE_EAST": 161,
+        "OCEANIA": 28
+      },
+      "sampleCount": 929
+    }
+  },
+  "hgdpPopulationLabelMap": [
+    {
+      "local_label": "Adygei",
+      "population": "Adygei",
+      "region_general_label": "Caucasus"
+    },
+    {
+      "local_label": "Balochi",
+      "population": "Balochi",
+      "region_general_label": "Greater_Iranian"
+    },
+    {
+      "local_label": "BantuKenya",
+      "population": "BantuKenya",
+      "region_general_label": "East_African"
+    },
+    {
+      "local_label": "BantuSouthAfrica",
+      "population": "BantuSouthAfrica",
+      "region_general_label": "Southern_African"
+    },
+    {
+      "local_label": "Basque",
+      "population": "Basque",
+      "region_general_label": "Western_European"
+    },
+    {
+      "local_label": "Bedouin",
+      "population": "Bedouin",
+      "region_general_label": "Middle_Eastern"
+    },
+    {
+      "local_label": "Italian_Bergamo",
+      "population": "BergamoItalian",
+      "region_general_label": "Southern_European"
+    },
+    {
+      "local_label": "Biaka",
+      "population": "Biaka",
+      "region_general_label": "Central_African"
+    },
+    {
+      "local_label": "Bougainville",
+      "population": "Bougainville",
+      "region_general_label": "Oceanian"
+    },
+    {
+      "local_label": "Brahui",
+      "population": "Brahui",
+      "region_general_label": "Greater_Iranian"
+    },
+    {
+      "local_label": "Burusho",
+      "population": "Burusho",
+      "region_general_label": "South_Asian"
+    },
+    {
+      "local_label": "Cambodian",
+      "population": "Cambodian",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Colombian",
+      "population": "Colombian",
+      "region_general_label": "Indigenous_American"
+    },
+    {
+      "local_label": "Dai",
+      "population": "Dai",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Daur",
+      "population": "Daur",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Druze",
+      "population": "Druze",
+      "region_general_label": "Middle_Eastern"
+    },
+    {
+      "local_label": "French",
+      "population": "French",
+      "region_general_label": "Western_European"
+    },
+    {
+      "local_label": "Han",
+      "population": "Han",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Hazara",
+      "population": "Hazara",
+      "region_general_label": "Central_Asian"
+    },
+    {
+      "local_label": "Hezhen",
+      "population": "Hezhen",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Japanese",
+      "population": "Japanese",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Kalash",
+      "population": "Kalash",
+      "region_general_label": "South_Asian"
+    },
+    {
+      "local_label": "Karitiana",
+      "population": "Karitiana",
+      "region_general_label": "Indigenous_American"
+    },
+    {
+      "local_label": "Lahu",
+      "population": "Lahu",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Makrani",
+      "population": "Makrani",
+      "region_general_label": "Greater_Iranian"
+    },
+    {
+      "local_label": "Mandenka",
+      "population": "Mandenka",
+      "region_general_label": "West_African"
+    },
+    {
+      "local_label": "Maya",
+      "population": "Maya",
+      "region_general_label": "Indigenous_American"
+    },
+    {
+      "local_label": "Mbuti",
+      "population": "Mbuti",
+      "region_general_label": "Central_African"
+    },
+    {
+      "local_label": "Miao",
+      "population": "Miao",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Mongolian",
+      "population": "Mongolian",
+      "region_general_label": "Northeast_Asian"
+    },
+    {
+      "local_label": "Mozabite",
+      "population": "Mozabite",
+      "region_general_label": "North_African"
+    },
+    {
+      "local_label": "Naxi",
+      "population": "Naxi",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Han_Northern",
+      "population": "NorthernHan",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Orcadian",
+      "population": "Orcadian",
+      "region_general_label": "Western_European"
+    },
+    {
+      "local_label": "Oroqen",
+      "population": "Oroqen",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Palestinian",
+      "population": "Palestinian",
+      "region_general_label": "Middle_Eastern"
+    },
+    {
+      "local_label": "Papuan_Highlands",
+      "population": "PapuanHighlands",
+      "region_general_label": "Oceanian"
+    },
+    {
+      "local_label": "Papuan_Sepik",
+      "population": "PapuanSepik",
+      "region_general_label": "Oceanian"
+    },
+    {
+      "local_label": "Pathan",
+      "population": "Pathan",
+      "region_general_label": "Greater_Iranian"
+    },
+    {
+      "local_label": "Pima",
+      "population": "Pima",
+      "region_general_label": "Indigenous_American"
+    },
+    {
+      "local_label": "Russian",
+      "population": "Russian",
+      "region_general_label": "Eastern_European"
+    },
+    {
+      "local_label": "San",
+      "population": "San",
+      "region_general_label": "Southern_African_Khoisan"
+    },
+    {
+      "local_label": "Sardinian",
+      "population": "Sardinian",
+      "region_general_label": "Southern_European"
+    },
+    {
+      "local_label": "She",
+      "population": "She",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Sindhi",
+      "population": "Sindhi",
+      "region_general_label": "South_Asian"
+    },
+    {
+      "local_label": "Surui",
+      "population": "Surui",
+      "region_general_label": "Indigenous_American"
+    },
+    {
+      "local_label": "Tu",
+      "population": "Tu",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Tujia",
+      "population": "Tujia",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Tuscan",
+      "population": "Tuscan",
+      "region_general_label": "Southern_European"
+    },
+    {
+      "local_label": "Uygur",
+      "population": "Uygur",
+      "region_general_label": "Central_Asian"
+    },
+    {
+      "local_label": "Xibo",
+      "population": "Xibo",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Yakut",
+      "population": "Yakut",
+      "region_general_label": "Siberian"
+    },
+    {
+      "local_label": "Yi",
+      "population": "Yi",
+      "region_general_label": "East_Asian"
+    },
+    {
+      "local_label": "Yoruba",
+      "population": "Yoruba",
+      "region_general_label": "West_African"
+    }
+  ]
+}

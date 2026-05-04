@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+README_pipeline.md
+UI_INTEGRATION_BRIEF.md
+run_pipeline_wsl.sh
+scripts/

@@ -1,0 +1,12 @@
+{
+  "name": "genetic-ancestry-report",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "python -m http.server 4173",
+    "pipeline": "bash run_pipeline_wsl.sh",
+    "pipeline:eagle": "RUN_EAGLE=1 bash run_pipeline_wsl.sh",
+    "deploy": "vercel deploy",
+    "deploy:prod": "vercel deploy --prod"
+  }
+}

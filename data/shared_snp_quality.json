@@ -1,0 +1,28 @@
+{
+  "datasets": {
+    "1000genomes": {
+      "chromosomes": [],
+      "displayName": "1000 Genomes",
+      "totals": {
+        "compatibleBiallelicSnpCount": 0,
+        "compatibleRatePct": null,
+        "coordinateMatchRatePct": null,
+        "sharedIdCount": 0
+      }
+    },
+    "hgdp": {
+      "chromosomes": [],
+      "displayName": "HGDP",
+      "totals": {
+        "compatibleBiallelicSnpCount": 0,
+        "compatibleRatePct": null,
+        "coordinateMatchRatePct": null,
+        "sharedIdCount": 0
+      }
+    }
+  },
+  "extraction": {
+    "build": null,
+    "usable23andmeRsidCalls": null
+  }
+}

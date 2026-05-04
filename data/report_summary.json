@@ -1,0 +1,43 @@
+{
+  "datasets": [
+    {
+      "compatibleRatePct": null,
+      "compatibleSnpCount": 0,
+      "coordinateMatchRatePct": null,
+      "displayName": "HGDP",
+      "eagleResultFileCount": 0,
+      "id": "hgdp",
+      "referenceLabelCount": 19,
+      "referenceSampleCount": 929,
+      "status": "prepared_for_eagle"
+    },
+    {
+      "compatibleRatePct": null,
+      "compatibleSnpCount": 0,
+      "coordinateMatchRatePct": null,
+      "displayName": "1000 Genomes",
+      "eagleResultFileCount": 0,
+      "id": "1000genomes",
+      "referenceLabelCount": 5,
+      "referenceSampleCount": 2504,
+      "status": "prepared_for_eagle"
+    }
+  ],
+  "extraction": {
+    "build": null,
+    "usable23andmeRsidCalls": null
+  },
+  "generatedAt": "2026-05-04T07:34:34.271338+00:00",
+  "recommendedViews": [
+    "report_dashboard",
+    "chromosome_view",
+    "explore_map",
+    "analysis_quality"
+  ],
+  "sampleName": "MY_SAMPLE",
+  "schemaVersion": 1,
+  "uiDirection": {
+    "primary": "Option 5 consumer-friendly ancestry report",
+    "secondary": "Option 2 explore map"
+  }
+}

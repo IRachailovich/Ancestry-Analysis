@@ -1,0 +1,20 @@
+{
+  "datasets": {
+    "1000genomes": {
+      "chromosomesWithResultFiles": [],
+      "displayName": "1000 Genomes",
+      "exists": false,
+      "fileCount": 0,
+      "labelsUsed": false,
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/eagle2/1000genomes"
+    },
+    "hgdp": {
+      "chromosomesWithResultFiles": [],
+      "displayName": "HGDP",
+      "exists": true,
+      "fileCount": 0,
+      "labelsUsed": false,
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/eagle2/hgdp"
+    }
+  }
+}

@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Genetic Ancestry Report</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Genetic ancestry analysis</p>
+        <h1>Personal ancestry report</h1>
+      </div>
+      <nav aria-label="Main views">
+        <a href="#report">Report</a>
+        <a href="#chromosomes">Chromosomes</a>
+        <a href="#map">Explore</a>
+        <a href="#quality">Quality</a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="summary" id="report">
+        <div class="summary-copy">
+          <p class="eyebrow">Option 5 direction</p>
+          <h2>Readable ancestry results, with the analysis details still close at hand.</h2>
+          <p>
+            This deployable UI shell consumes the JSON contract produced by the pipeline:
+            report summary, SNP quality, reference labels, and EAGLE2 result status.
+          </p>
+        </div>
+        <div class="status-panel" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="dataStatus">Loading report data</span>
+        </div>
+      </section>
+
+      <section class="metrics" aria-label="Report summary metrics">
+        <article>
+          <span>Sample</span>
+          <strong id="sampleName">-</strong>
+        </article>
+        <article>
+          <span>23andMe rsID calls</span>
+          <strong id="usableCalls">-</strong>
+        </article>
+        <article>
+          <span>Reference sets</span>
+          <strong id="datasetCount">-</strong>
+        </article>
+        <article>
+          <span>Primary UI</span>
+          <strong id="uiDirection">-</strong>
+        </article>
+      </section>
+
+      <section class="layout-grid">
+        <article class="panel span-7">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Reference readiness</p>
+              <h3>Pipeline datasets</h3>
+            </div>
+          </div>
+          <div class="dataset-list" id="datasetList"></div>
+        </article>
+
+        <article class="panel span-5">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Report composition</p>
+              <h3>Ancestry overview</h3>
+            </div>
+          </div>
+          <div class="rings" aria-hidden="true">
+            <div class="ring ring-large"></div>
+            <div class="ring ring-small"></div>
+          </div>
+          <div class="legend">
+            <span><i class="swatch teal"></i> Broad ancestry</span>
+            <span><i class="swatch coral"></i> Local signals</span>
+            <span><i class="swatch amber"></i> Pending EAGLE2</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="layout-grid">
+        <article class="panel span-5" id="chromosomes">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Chromosome view</p>
+              <h3>Segment workspace</h3>
+            </div>
+          </div>
+          <div class="chromosome-stack" id="chromosomeStack"></div>
+        </article>
+
+        <article class="panel span-7" id="map">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Option 2 as a tab</p>
+              <h3>Explore map</h3>
+            </div>
+          </div>
+          <div class="map-shell">
+            <div class="arc arc-one"></div>
+            <div class="arc arc-two"></div>
+            <span class="pin pin-a"></span>
+            <span class="pin pin-b"></span>
+            <span class="pin pin-c"></span>
+          </div>
+        </article>
+      </section>
+
+      <section class="panel" id="quality">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Analysis quality</p>
+            <h3>Shared SNP compatibility</h3>
+          </div>
+        </div>
+        <div class="quality-grid" id="qualityGrid"></div>
+      </section>
+
+      <section class="concept">
+        <div>
+          <p class="eyebrow">Design reference</p>
+          <h3>Selected model UI options</h3>
+        </div>
+        <img src="/assets/ui-concepts/ancestry-ui-options.png" alt="Five UI concept options for the ancestry analysis app">
+      </section>
+    </main>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+</html>
