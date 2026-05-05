@@ -27,10 +27,12 @@ The default run now produces UI-ready JSON even before EAGLE2 runs. It writes th
 - `/mnt/f/data/processed/genetics_eagle/results/app/shared_snp_quality.json`
 - `/mnt/f/data/processed/genetics_eagle/results/app/reference_labels.json`
 - `/mnt/f/data/processed/genetics_eagle/results/app/eagle_results_index.json`
+- `/mnt/f/data/processed/genetics_eagle/results/phasing_qc/phasing_qc.json`
 - `/mnt/d/Python/Genetics/data/report_summary.json`
 - `/mnt/d/Python/Genetics/data/shared_snp_quality.json`
 - `/mnt/d/Python/Genetics/data/reference_labels.json`
 - `/mnt/d/Python/Genetics/data/eagle_results_index.json`
+- `/mnt/d/Python/Genetics/data/phasing_qc.json`
 
 EAGLE2 is installed at `/usr/local/bin/eagle2` from the official Broad/AlkesGroup v2.4.1 bundle. Eagle2 is the default algorithm; the pipeline never passes `--v1`.
 

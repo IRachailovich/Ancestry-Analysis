@@ -42,6 +42,12 @@ App-facing JSON is also copied into:
 data/
 ```
 
+The chromosome view uses:
+
+```bash
+data/phasing_qc.json
+```
+
 ## Documentation
 
 Detailed pipeline notes:

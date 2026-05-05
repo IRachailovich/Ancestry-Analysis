@@ -13,5 +13,6 @@ Expected files:
 - `shared_snp_quality.json`
 - `reference_labels.json`
 - `eagle_results_index.json`
+- `phasing_qc.json`
 
 If these files are absent, the deployed UI falls back to a preview shell with pending values.

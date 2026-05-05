@@ -48,6 +48,10 @@ if [[ "${RUN_EAGLE:-0}" == "1" ]]; then
     --hgdp-general-labels "$OUT/metadata/hgdp_labels_general.tsv" \
     --kgp-labels "$OUT/metadata/1000genomes_labels.tsv"
 
+  python3 "$REPO/scripts/check_phasing_qc.py" \
+    --eagle-dir "$OUT/results/eagle2" \
+    --outdir "$OUT/results/phasing_qc"
+
   python3 "$REPO/scripts/build_report_json.py" \
     --metadata-dir "$OUT/metadata" \
     --shared-dir "$OUT/work/shared_snps" \
@@ -64,6 +68,7 @@ if [[ "${RUN_EAGLE:-0}" == "1" ]]; then
   fi
 
   cp "$OUT/results/app/"*.json "$APP_DATA_DIR/"
+  cp "$OUT/results/phasing_qc/phasing_qc.json" "$APP_DATA_DIR/"
 else
   echo "Prepared labels, shared-SNP VCFs, and app JSON. Published app JSON to $APP_DATA_DIR. Set RUN_EAGLE=1 to run EAGLE2." >&2
 fi

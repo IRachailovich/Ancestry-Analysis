@@ -41,6 +41,10 @@ const fallbackQuality = {
   },
 };
 
+const fallbackPhasing = {
+  datasets: {},
+};
+
 function formatNumber(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
     return "Pending";
@@ -82,7 +86,7 @@ function renderDatasets(report) {
     const rate = dataset.compatibleRatePct ?? 0;
     const row = document.createElement("div");
     row.className = "dataset-row";
-    row.innerHTML = `
+    group.innerHTML = `
       <div>
         <div class="dataset-title">${dataset.displayName}</div>
         <div class="dataset-meta">${formatNumber(dataset.referenceSampleCount)} reference samples · ${formatNumber(dataset.referenceLabelCount)} labels</div>
@@ -97,19 +101,71 @@ function renderDatasets(report) {
   }
 }
 
-function renderChromosomes() {
+function datasetLabel(dataset) {
+  return dataset === "1000genomes" ? "1000 Genomes" : dataset.toUpperCase();
+}
+
+function chromosomeRow(chrom, stats) {
+  const hets = Number(stats?.heterozygousVariants ?? 0);
+  const phased = Number(stats?.phasedHeterozygousVariants ?? 0);
+  const rate = Number(stats?.phasedHetRatePct ?? 0);
+  const hap1 = Number(stats?.hap1AltAlleles ?? 0);
+  const hap2 = Number(stats?.hap2AltAlleles ?? 0);
+  const hapTotal = Math.max(hap1 + hap2, 1);
+  const hap1Pct = (hap1 / hapTotal) * 100;
+  const hap2Pct = (hap2 / hapTotal) * 100;
+
+  return `
+    <div class="chromosome">
+      <span>${chrom}</span>
+      <div class="chromosome-body">
+        <div class="chromosome-track" aria-label="Chromosome ${chrom} phased haplotype balance">
+          <i class="hap-one" style="flex-basis: ${hap1Pct}%"></i>
+          <i class="hap-two" style="flex-basis: ${hap2Pct}%"></i>
+        </div>
+        <div class="chromosome-meta">
+          <span>${formatNumber(phased)} / ${formatNumber(hets)} hets phased</span>
+          <strong>${formatPercent(rate)}</strong>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderChromosomes(phasing) {
   const stack = document.querySelector("#chromosomeStack");
   stack.innerHTML = "";
-  for (let chrom = 1; chrom <= 8; chrom += 1) {
-    const row = document.createElement("div");
-    row.className = "chromosome";
+
+  const datasets = ["hgdp", "1000genomes"].filter((dataset) => phasing.datasets?.[dataset]);
+  if (!datasets.length) {
+    stack.innerHTML = '<p class="empty-state">Phasing QC has not been exported yet.</p>';
+    return;
+  }
+
+  for (const dataset of datasets) {
+    const group = document.createElement("section");
+    group.className = "chromosome-group";
+    const rows = [];
+    for (let chrom = 1; chrom <= 22; chrom += 1) {
+      const stats = phasing.datasets?.[dataset]?.[String(chrom)];
+      if (stats) {
+        rows.push(chromosomeRow(chrom, stats));
+      }
+    }
+    const totalHets = rows.length
+      ? Object.values(phasing.datasets?.[dataset] || {}).reduce((sum, row) => sum + Number(row.heterozygousVariants || 0), 0)
+      : 0;
     row.innerHTML = `
-      <span>${chrom}</span>
-      <div class="chromosome-track" aria-label="Chromosome ${chrom} preview">
-        <i></i><i></i><i></i>
+      <div class="chromosome-group-heading">
+        <div>
+          <strong>${datasetLabel(dataset)}</strong>
+          <span>${formatNumber(totalHets)} heterozygous sites</span>
+        </div>
+        <span class="pill">phased haplotypes</span>
       </div>
+      ${rows.join("")}
     `;
-    stack.append(row);
+    stack.append(group);
   }
 }
 
@@ -138,13 +194,15 @@ function renderQuality(report, quality) {
 }
 
 async function main() {
-  const [reportResult, qualityResult] = await Promise.all([
+  const [reportResult, qualityResult, phasingResult] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),
+    loadJson("/data/phasing_qc.json", fallbackPhasing),
   ]);
 
   const report = reportResult.data;
   const quality = qualityResult.data;
+  const phasing = phasingResult.data;
   const live = reportResult.source === "pipeline";
   document.querySelector("#dataStatus").textContent = live
     ? "Using exported pipeline JSON"
@@ -152,7 +210,7 @@ async function main() {
 
   renderMetrics(report);
   renderDatasets(report);
-  renderChromosomes();
+  renderChromosomes(phasing);
   renderQuality(report, quality);
 }
 

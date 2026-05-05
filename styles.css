@@ -291,7 +291,36 @@ main {
 
 .chromosome-stack {
   display: grid;
-  gap: 9px;
+  gap: 16px;
+  max-height: 620px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.chromosome-group {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+}
+
+.chromosome-group-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.chromosome-group-heading div {
+  display: grid;
+  gap: 3px;
+}
+
+.chromosome-group-heading span,
+.chromosome-meta {
+  color: var(--muted);
+  font-size: 12px;
 }
 
 .chromosome {
@@ -301,27 +330,51 @@ main {
   grid-template-columns: 34px 1fr;
 }
 
+.chromosome > span {
+  color: var(--slate);
+  font-size: 13px;
+  font-weight: 720;
+}
+
+.chromosome-body {
+  display: grid;
+  gap: 5px;
+}
+
 .chromosome-track {
   background: #edf1ee;
   border-radius: 99px;
   display: flex;
-  height: 14px;
+  height: 12px;
   overflow: hidden;
 }
 
-.chromosome-track i:nth-child(1) {
+.chromosome-track i {
+  min-width: 2px;
+}
+
+.hap-one {
   background: var(--teal);
-  flex: 4;
 }
 
-.chromosome-track i:nth-child(2) {
+.hap-two {
   background: var(--coral);
-  flex: 2;
 }
 
-.chromosome-track i:nth-child(3) {
-  background: var(--green);
-  flex: 3;
+.chromosome-meta {
+  display: flex;
+  justify-content: space-between;
+}
+
+.chromosome-meta strong {
+  color: var(--ink);
+  font-size: 12px;
+}
+
+.empty-state {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .map-shell {

@@ -5,29 +5,29 @@
       "compatibleSnpCount": 566838,
       "coordinateMatchRatePct": 2.07,
       "displayName": "HGDP",
-      "eagleResultFileCount": 0,
+      "eagleResultFileCount": 23,
       "id": "hgdp",
       "referenceLabelCount": 19,
       "referenceSampleCount": 929,
-      "status": "prepared_for_eagle"
+      "status": "eagle_results_detected"
     },
     {
       "compatibleRatePct": 99.86,
       "compatibleSnpCount": 587641,
       "coordinateMatchRatePct": 100.0,
       "displayName": "1000 Genomes",
-      "eagleResultFileCount": 0,
+      "eagleResultFileCount": 23,
       "id": "1000genomes",
       "referenceLabelCount": 5,
       "referenceSampleCount": 2504,
-      "status": "prepared_for_eagle"
+      "status": "eagle_results_detected"
     }
   ],
   "extraction": {
     "build": "37",
     "usable23andmeRsidCalls": 597105
   },
-  "generatedAt": "2026-05-05T03:43:11.259600+00:00",
+  "generatedAt": "2026-05-05T04:15:14.086336+00:00",
   "recommendedViews": [
     "report_dashboard",
     "chromosome_view",
