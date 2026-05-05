@@ -120,6 +120,12 @@ UI integration notes:
 UI_INTEGRATION_BRIEF.md
 ```
 
+HGDP label grouping audit:
+
+```text
+docs/HGDP_LABEL_GROUPING.md
+```
+
 ## App
 
 Run the static report app locally:
