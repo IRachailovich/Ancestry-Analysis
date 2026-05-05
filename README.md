@@ -126,6 +126,13 @@ HGDP label grouping audit:
 docs/HGDP_LABEL_GROUPING.md
 ```
 
+Lazaridis/EuropeFullyPublic modern-label audit and phasing decision:
+
+```text
+docs/LAZARIDIS_LABEL_AUDIT.md
+docs/LAZARIDIS_STAGE_DECISION.md
+```
+
 ## App
 
 Run the static report app locally:
