@@ -38,6 +38,7 @@ To run EAGLE2:
 
 ```bash
 cd /mnt/d/Python/Genetics
+export SKIP_EXTRACTION=1
 export RUN_EAGLE=1
 export THREADS=8
 bash run_pipeline_wsl.sh

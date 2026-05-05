@@ -8,6 +8,7 @@ APP_DATA_DIR="$REPO/data"
 SAMPLE_NAME=MY_SAMPLE
 THREADS="${THREADS:-4}"
 SEGMENTS_DIR="$OUT/results/segments"
+SKIP_EXTRACTION="${SKIP_EXTRACTION:-0}"
 
 mkdir -p "$OUT"/{metadata,work,logs,results}
 mkdir -p "$APP_DATA_DIR"
@@ -17,11 +18,15 @@ python3 "$REPO/scripts/make_labels.py" \
   --kgp-panel "$RAW/1000genomes/integrated_call_samples_v3.20130502.ALL.panel" \
   --outdir "$OUT/metadata"
 
-python3 "$REPO/scripts/extract_shared_snps.py" \
-  --my-23andme "$RAW/my_23andme_data/genome_Itamar_Rachailovich_v5_Full_20260117221330.txt" \
-  --sample-name "$SAMPLE_NAME" \
-  --outdir "$OUT/work/shared_snps" \
-  2>&1 | tee "$OUT/logs/extract_shared_snps.log"
+if [[ "$SKIP_EXTRACTION" == "1" ]]; then
+  echo "Skipping shared-SNP extraction; using existing files in $OUT/work/shared_snps" >&2
+else
+  python3 "$REPO/scripts/extract_shared_snps.py" \
+    --my-23andme "$RAW/my_23andme_data/genome_Itamar_Rachailovich_v5_Full_20260117221330.txt" \
+    --sample-name "$SAMPLE_NAME" \
+    --outdir "$OUT/work/shared_snps" \
+    2>&1 | tee "$OUT/logs/extract_shared_snps.log"
+fi
 
 python3 "$REPO/scripts/build_report_json.py" \
   --metadata-dir "$OUT/metadata" \

@@ -1,28 +1,476 @@
 {
   "datasets": {
     "1000genomes": {
-      "chromosomes": [],
+      "chromosomes": [
+        {
+          "chrom": "1",
+          "compatibleBiallelicSnpCount": 49338,
+          "compatibleRatePct": 99.86,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 68,
+          "sameCoordinateCount": 49338,
+          "sharedIdCount": 49406
+        },
+        {
+          "chrom": "2",
+          "compatibleBiallelicSnpCount": 48764,
+          "compatibleRatePct": 99.84,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 78,
+          "sameCoordinateCount": 48764,
+          "sharedIdCount": 48842
+        },
+        {
+          "chrom": "3",
+          "compatibleBiallelicSnpCount": 41203,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 51,
+          "sameCoordinateCount": 41203,
+          "sharedIdCount": 41254
+        },
+        {
+          "chrom": "4",
+          "compatibleBiallelicSnpCount": 38080,
+          "compatibleRatePct": 99.86,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 55,
+          "sameCoordinateCount": 38080,
+          "sharedIdCount": 38135
+        },
+        {
+          "chrom": "5",
+          "compatibleBiallelicSnpCount": 35435,
+          "compatibleRatePct": 99.84,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 56,
+          "sameCoordinateCount": 35435,
+          "sharedIdCount": 35491
+        },
+        {
+          "chrom": "6",
+          "compatibleBiallelicSnpCount": 42133,
+          "compatibleRatePct": 99.82,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 78,
+          "sameCoordinateCount": 42133,
+          "sharedIdCount": 42211
+        },
+        {
+          "chrom": "7",
+          "compatibleBiallelicSnpCount": 32672,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 39,
+          "sameCoordinateCount": 32672,
+          "sharedIdCount": 32711
+        },
+        {
+          "chrom": "8",
+          "compatibleBiallelicSnpCount": 30573,
+          "compatibleRatePct": 99.83,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 51,
+          "sameCoordinateCount": 30573,
+          "sharedIdCount": 30624
+        },
+        {
+          "chrom": "9",
+          "compatibleBiallelicSnpCount": 25136,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 29,
+          "sameCoordinateCount": 25136,
+          "sharedIdCount": 25165
+        },
+        {
+          "chrom": "10",
+          "compatibleBiallelicSnpCount": 30969,
+          "compatibleRatePct": 99.89,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 34,
+          "sameCoordinateCount": 30969,
+          "sharedIdCount": 31003
+        },
+        {
+          "chrom": "11",
+          "compatibleBiallelicSnpCount": 29741,
+          "compatibleRatePct": 99.9,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 30,
+          "sameCoordinateCount": 29741,
+          "sharedIdCount": 29771
+        },
+        {
+          "chrom": "12",
+          "compatibleBiallelicSnpCount": 27925,
+          "compatibleRatePct": 99.85,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 41,
+          "sameCoordinateCount": 27925,
+          "sharedIdCount": 27966
+        },
+        {
+          "chrom": "13",
+          "compatibleBiallelicSnpCount": 20634,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 25,
+          "sameCoordinateCount": 20634,
+          "sharedIdCount": 20659
+        },
+        {
+          "chrom": "14",
+          "compatibleBiallelicSnpCount": 18855,
+          "compatibleRatePct": 99.84,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 31,
+          "sameCoordinateCount": 18855,
+          "sharedIdCount": 18886
+        },
+        {
+          "chrom": "15",
+          "compatibleBiallelicSnpCount": 17936,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 21,
+          "sameCoordinateCount": 17936,
+          "sharedIdCount": 17957
+        },
+        {
+          "chrom": "16",
+          "compatibleBiallelicSnpCount": 19184,
+          "compatibleRatePct": 99.87,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 25,
+          "sameCoordinateCount": 19184,
+          "sharedIdCount": 19209
+        },
+        {
+          "chrom": "17",
+          "compatibleBiallelicSnpCount": 17554,
+          "compatibleRatePct": 99.88,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 21,
+          "sameCoordinateCount": 17554,
+          "sharedIdCount": 17575
+        },
+        {
+          "chrom": "18",
+          "compatibleBiallelicSnpCount": 17148,
+          "compatibleRatePct": 99.86,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 24,
+          "sameCoordinateCount": 17148,
+          "sharedIdCount": 17172
+        },
+        {
+          "chrom": "19",
+          "compatibleBiallelicSnpCount": 13503,
+          "compatibleRatePct": 99.83,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 23,
+          "sameCoordinateCount": 13503,
+          "sharedIdCount": 13526
+        },
+        {
+          "chrom": "20",
+          "compatibleBiallelicSnpCount": 14213,
+          "compatibleRatePct": 99.87,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 19,
+          "sameCoordinateCount": 14213,
+          "sharedIdCount": 14232
+        },
+        {
+          "chrom": "21",
+          "compatibleBiallelicSnpCount": 8239,
+          "compatibleRatePct": 99.92,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 7,
+          "sameCoordinateCount": 8239,
+          "sharedIdCount": 8246
+        },
+        {
+          "chrom": "22",
+          "compatibleBiallelicSnpCount": 8406,
+          "compatibleRatePct": 99.9,
+          "coordinateMatchRatePct": 100.0,
+          "differentCoordinateCount": 0,
+          "incompatibleOrSkippedCount": 8,
+          "sameCoordinateCount": 8406,
+          "sharedIdCount": 8414
+        }
+      ],
       "displayName": "1000 Genomes",
       "totals": {
-        "compatibleBiallelicSnpCount": 0,
-        "compatibleRatePct": null,
-        "coordinateMatchRatePct": null,
-        "sharedIdCount": 0
+        "compatibleBiallelicSnpCount": 587641,
+        "compatibleRatePct": 99.86,
+        "coordinateMatchRatePct": 100.0,
+        "differentCoordinateCount": 0,
+        "incompatibleOrSkippedCount": 814,
+        "sameCoordinateCount": 587641,
+        "sharedIdCount": 588455
       }
     },
     "hgdp": {
-      "chromosomes": [],
+      "chromosomes": [
+        {
+          "chrom": "1",
+          "compatibleBiallelicSnpCount": 47216,
+          "compatibleRatePct": 97.19,
+          "coordinateMatchRatePct": 1.07,
+          "differentCoordinateCount": 46710,
+          "incompatibleOrSkippedCount": 1363,
+          "sameCoordinateCount": 506,
+          "sharedIdCount": 48579
+        },
+        {
+          "chrom": "2",
+          "compatibleBiallelicSnpCount": 47056,
+          "compatibleRatePct": 97.39,
+          "coordinateMatchRatePct": 1.62,
+          "differentCoordinateCount": 46294,
+          "incompatibleOrSkippedCount": 1262,
+          "sameCoordinateCount": 762,
+          "sharedIdCount": 48318
+        },
+        {
+          "chrom": "3",
+          "compatibleBiallelicSnpCount": 39870,
+          "compatibleRatePct": 97.44,
+          "coordinateMatchRatePct": 1.18,
+          "differentCoordinateCount": 39400,
+          "incompatibleOrSkippedCount": 1049,
+          "sameCoordinateCount": 470,
+          "sharedIdCount": 40919
+        },
+        {
+          "chrom": "4",
+          "compatibleBiallelicSnpCount": 37043,
+          "compatibleRatePct": 97.26,
+          "coordinateMatchRatePct": 1.01,
+          "differentCoordinateCount": 36668,
+          "incompatibleOrSkippedCount": 1043,
+          "sameCoordinateCount": 375,
+          "sharedIdCount": 38086
+        },
+        {
+          "chrom": "5",
+          "compatibleBiallelicSnpCount": 34323,
+          "compatibleRatePct": 97.36,
+          "coordinateMatchRatePct": 1.16,
+          "differentCoordinateCount": 33924,
+          "incompatibleOrSkippedCount": 929,
+          "sameCoordinateCount": 399,
+          "sharedIdCount": 35252
+        },
+        {
+          "chrom": "6",
+          "compatibleBiallelicSnpCount": 40861,
+          "compatibleRatePct": 97.14,
+          "coordinateMatchRatePct": 1.59,
+          "differentCoordinateCount": 40213,
+          "incompatibleOrSkippedCount": 1203,
+          "sameCoordinateCount": 648,
+          "sharedIdCount": 42064
+        },
+        {
+          "chrom": "7",
+          "compatibleBiallelicSnpCount": 31598,
+          "compatibleRatePct": 96.99,
+          "coordinateMatchRatePct": 1.45,
+          "differentCoordinateCount": 31141,
+          "incompatibleOrSkippedCount": 982,
+          "sameCoordinateCount": 457,
+          "sharedIdCount": 32580
+        },
+        {
+          "chrom": "8",
+          "compatibleBiallelicSnpCount": 29653,
+          "compatibleRatePct": 97.02,
+          "coordinateMatchRatePct": 1.29,
+          "differentCoordinateCount": 29270,
+          "incompatibleOrSkippedCount": 912,
+          "sameCoordinateCount": 383,
+          "sharedIdCount": 30565
+        },
+        {
+          "chrom": "9",
+          "compatibleBiallelicSnpCount": 24168,
+          "compatibleRatePct": 96.99,
+          "coordinateMatchRatePct": 15.67,
+          "differentCoordinateCount": 20381,
+          "incompatibleOrSkippedCount": 750,
+          "sameCoordinateCount": 3787,
+          "sharedIdCount": 24918
+        },
+        {
+          "chrom": "10",
+          "compatibleBiallelicSnpCount": 29865,
+          "compatibleRatePct": 96.78,
+          "coordinateMatchRatePct": 1.16,
+          "differentCoordinateCount": 29519,
+          "incompatibleOrSkippedCount": 993,
+          "sameCoordinateCount": 346,
+          "sharedIdCount": 30858
+        },
+        {
+          "chrom": "11",
+          "compatibleBiallelicSnpCount": 28630,
+          "compatibleRatePct": 97.3,
+          "coordinateMatchRatePct": 2.16,
+          "differentCoordinateCount": 28012,
+          "incompatibleOrSkippedCount": 795,
+          "sameCoordinateCount": 618,
+          "sharedIdCount": 29425
+        },
+        {
+          "chrom": "12",
+          "compatibleBiallelicSnpCount": 26904,
+          "compatibleRatePct": 97.3,
+          "coordinateMatchRatePct": 1.08,
+          "differentCoordinateCount": 26614,
+          "incompatibleOrSkippedCount": 746,
+          "sameCoordinateCount": 290,
+          "sharedIdCount": 27650
+        },
+        {
+          "chrom": "13",
+          "compatibleBiallelicSnpCount": 20075,
+          "compatibleRatePct": 97.27,
+          "coordinateMatchRatePct": 1.12,
+          "differentCoordinateCount": 19850,
+          "incompatibleOrSkippedCount": 564,
+          "sameCoordinateCount": 225,
+          "sharedIdCount": 20639
+        },
+        {
+          "chrom": "14",
+          "compatibleBiallelicSnpCount": 18259,
+          "compatibleRatePct": 97.15,
+          "coordinateMatchRatePct": 1.12,
+          "differentCoordinateCount": 18055,
+          "incompatibleOrSkippedCount": 535,
+          "sameCoordinateCount": 204,
+          "sharedIdCount": 18794
+        },
+        {
+          "chrom": "15",
+          "compatibleBiallelicSnpCount": 17097,
+          "compatibleRatePct": 96.55,
+          "coordinateMatchRatePct": 1.25,
+          "differentCoordinateCount": 16883,
+          "incompatibleOrSkippedCount": 611,
+          "sameCoordinateCount": 214,
+          "sharedIdCount": 17708
+        },
+        {
+          "chrom": "16",
+          "compatibleBiallelicSnpCount": 18448,
+          "compatibleRatePct": 96.88,
+          "coordinateMatchRatePct": 1.53,
+          "differentCoordinateCount": 18165,
+          "incompatibleOrSkippedCount": 595,
+          "sameCoordinateCount": 283,
+          "sharedIdCount": 19043
+        },
+        {
+          "chrom": "17",
+          "compatibleBiallelicSnpCount": 16513,
+          "compatibleRatePct": 96.95,
+          "coordinateMatchRatePct": 1.23,
+          "differentCoordinateCount": 16310,
+          "incompatibleOrSkippedCount": 519,
+          "sameCoordinateCount": 203,
+          "sharedIdCount": 17032
+        },
+        {
+          "chrom": "18",
+          "compatibleBiallelicSnpCount": 16722,
+          "compatibleRatePct": 97.23,
+          "coordinateMatchRatePct": 4.54,
+          "differentCoordinateCount": 15962,
+          "incompatibleOrSkippedCount": 477,
+          "sameCoordinateCount": 760,
+          "sharedIdCount": 17199
+        },
+        {
+          "chrom": "19",
+          "compatibleBiallelicSnpCount": 12871,
+          "compatibleRatePct": 96.75,
+          "coordinateMatchRatePct": 3.59,
+          "differentCoordinateCount": 12409,
+          "incompatibleOrSkippedCount": 432,
+          "sameCoordinateCount": 462,
+          "sharedIdCount": 13303
+        },
+        {
+          "chrom": "20",
+          "compatibleBiallelicSnpCount": 13815,
+          "compatibleRatePct": 97.33,
+          "coordinateMatchRatePct": 1.12,
+          "differentCoordinateCount": 13660,
+          "incompatibleOrSkippedCount": 379,
+          "sameCoordinateCount": 155,
+          "sharedIdCount": 14194
+        },
+        {
+          "chrom": "21",
+          "compatibleBiallelicSnpCount": 7852,
+          "compatibleRatePct": 97.21,
+          "coordinateMatchRatePct": 1.22,
+          "differentCoordinateCount": 7756,
+          "incompatibleOrSkippedCount": 225,
+          "sameCoordinateCount": 96,
+          "sharedIdCount": 8077
+        },
+        {
+          "chrom": "22",
+          "compatibleBiallelicSnpCount": 7999,
+          "compatibleRatePct": 96.69,
+          "coordinateMatchRatePct": 1.31,
+          "differentCoordinateCount": 7894,
+          "incompatibleOrSkippedCount": 274,
+          "sameCoordinateCount": 105,
+          "sharedIdCount": 8273
+        }
+      ],
       "displayName": "HGDP",
       "totals": {
-        "compatibleBiallelicSnpCount": 0,
-        "compatibleRatePct": null,
-        "coordinateMatchRatePct": null,
-        "sharedIdCount": 0
+        "compatibleBiallelicSnpCount": 566838,
+        "compatibleRatePct": 97.15,
+        "coordinateMatchRatePct": 2.07,
+        "differentCoordinateCount": 555090,
+        "incompatibleOrSkippedCount": 16638,
+        "sameCoordinateCount": 11748,
+        "sharedIdCount": 583476
       }
     }
   },
   "extraction": {
-    "build": null,
-    "usable23andmeRsidCalls": null
+    "build": "37",
+    "usable23andmeRsidCalls": 597105
   }
 }

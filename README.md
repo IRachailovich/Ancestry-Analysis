@@ -25,7 +25,7 @@ After shared-SNP extraction finishes, run EAGLE2:
 
 ```bash
 cd /mnt/d/Python/Genetics
-RUN_EAGLE=1 THREADS=8 bash run_pipeline_wsl.sh
+SKIP_EXTRACTION=1 RUN_EAGLE=1 THREADS=8 bash run_pipeline_wsl.sh
 ```
 
 ## Output Locations

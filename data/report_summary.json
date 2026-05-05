@@ -1,9 +1,9 @@
 {
   "datasets": [
     {
-      "compatibleRatePct": null,
-      "compatibleSnpCount": 0,
-      "coordinateMatchRatePct": null,
+      "compatibleRatePct": 97.15,
+      "compatibleSnpCount": 566838,
+      "coordinateMatchRatePct": 2.07,
       "displayName": "HGDP",
       "eagleResultFileCount": 0,
       "id": "hgdp",
@@ -12,9 +12,9 @@
       "status": "prepared_for_eagle"
     },
     {
-      "compatibleRatePct": null,
-      "compatibleSnpCount": 0,
-      "coordinateMatchRatePct": null,
+      "compatibleRatePct": 99.86,
+      "compatibleSnpCount": 587641,
+      "coordinateMatchRatePct": 100.0,
       "displayName": "1000 Genomes",
       "eagleResultFileCount": 0,
       "id": "1000genomes",
@@ -24,10 +24,10 @@
     }
   ],
   "extraction": {
-    "build": null,
-    "usable23andmeRsidCalls": null
+    "build": "37",
+    "usable23andmeRsidCalls": 597105
   },
-  "generatedAt": "2026-05-04T07:34:34.271338+00:00",
+  "generatedAt": "2026-05-05T03:43:11.259600+00:00",
   "recommendedViews": [
     "report_dashboard",
     "chromosome_view",
