@@ -16,6 +16,7 @@ FLARE_MEMORY_GB="${FLARE_MEMORY_GB:-6}"
 PHASE_HGDP_REF="${PHASE_HGDP_REF:-1}"
 VALIDATE_CHROMS="${VALIDATE_CHROMS:-22}"
 VALIDATION_SAMPLES_PER_LABEL="${VALIDATION_SAMPLES_PER_LABEL:-2}"
+TOURNAMENT_CHROMS="${TOURNAMENT_CHROMS:-22}"
 
 mkdir -p "$OUT"/{metadata,work,logs,results}
 mkdir -p "$APP_DATA_DIR"
@@ -33,6 +34,45 @@ else
     --sample-name "$SAMPLE_NAME" \
     --outdir "$OUT/work/shared_snps" \
     2>&1 | tee "$OUT/logs/extract_shared_snps.log"
+fi
+
+if [[ "${RUN_TOURNAMENT:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/prepare_flare_maps.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --outdir "$OUT/work/flare_maps" \
+    --prefix hg38 \
+    --chroms "$TOURNAMENT_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  if [[ "$TOURNAMENT_CHROMS" == "all" ]]; then
+    tournament_chroms="$(seq 1 22)"
+  else
+    tournament_chroms="${TOURNAMENT_CHROMS//,/ }"
+  fi
+
+  for chrom in $tournament_chroms; do
+    chrom="${chrom#chr}"
+    if [[ ! -s "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" ]]; then
+      python3 "$REPO/scripts/phase_hgdp_reference.py" \
+        --shared-dir "$OUT/work/shared_snps" \
+        --outdir "$OUT/results/phased_reference/hgdp" \
+        --genetic-map-file "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+        --threads "$THREADS" \
+        --chroms "$chrom"
+    fi
+
+    python3 "$REPO/scripts/run_model_tournament.py" \
+      --phased-reference-vcf "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" \
+      --metadata-dir "$OUT/metadata" \
+      --map "$OUT/work/flare_maps/hg38.chr${chrom}.flare.map" \
+      --outdir "$OUT/results/model_tournament/hgdp/chr${chrom}" \
+      --repo "$REPO" \
+      --samples-per-label "$VALIDATION_SAMPLES_PER_LABEL" \
+      --threads "$FLARE_THREADS" \
+      --memory-gb "$FLARE_MEMORY_GB"
+
+    cp "$OUT/results/model_tournament/hgdp/chr${chrom}/model_tournament_summary.json" "$APP_DATA_DIR/model_tournament_hgdp_chr${chrom}.json"
+  done
 fi
 
 python3 "$REPO/scripts/build_report_json.py" \

@@ -50,6 +50,13 @@ cd /mnt/d/Python/Genetics
 SKIP_EXTRACTION=1 RUN_VALIDATE=1 VALIDATE_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
 ```
 
+Run the first model tournament:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_TOURNAMENT=1 TOURNAMENT_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+```
+
 ## Output Locations
 
 Main generated outputs are written outside the repo:
@@ -70,6 +77,7 @@ The chromosome view uses:
 data/phasing_qc.json
 data/chromosome_segments_hgdp.json
 data/validation_hgdp_chr22.json
+data/model_tournament_hgdp_chr22.json
 ```
 
 ## Documentation

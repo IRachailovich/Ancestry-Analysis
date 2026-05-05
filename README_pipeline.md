@@ -110,6 +110,22 @@ Outputs:
 - `/mnt/f/data/processed/genetics_eagle/results/validation/hgdp/chr22/summary.json`
 - `/mnt/d/Python/Genetics/data/validation_hgdp_chr22.json`
 
+## Model Tournament
+
+The tournament runs multiple model configurations against the same held-out reference samples. Current candidates include flat FLARE parameter variants and a broad-first FLARE baseline.
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_TOURNAMENT=1 TOURNAMENT_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+```
+
+Output:
+
+```bash
+/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/model_tournament_summary.json
+/mnt/d/Python/Genetics/data/model_tournament_hgdp_chr22.json
+```
+
 ## HMM Smoothing
 
 The smoothing stage runs after FLARE. It keeps haplotype copy 1 and copy 2 separate when the input has a `copy` column.

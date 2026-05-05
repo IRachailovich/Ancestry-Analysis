@@ -54,6 +54,11 @@ const fallbackValidation = {
   sampleCount: 0,
 };
 
+const fallbackTournament = {
+  winner: null,
+  models: [],
+};
+
 function applyTheme(theme) {
   const resolved = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = resolved;
@@ -290,14 +295,37 @@ function renderQuality(report, quality, validation) {
   grid.append(validator);
 }
 
+function renderTournament(tournament) {
+  const list = document.querySelector("#modelTournament");
+  if (!list) {
+    return;
+  }
+  const models = tournament.models || [];
+  if (!models.length) {
+    list.innerHTML = '<p class="empty-state">Model tournament results will appear after validation runs.</p>';
+    return;
+  }
+  list.innerHTML = models.slice(0, 5).map((model, index) => `
+    <div class="model-row">
+      <span>${index + 1}</span>
+      <div>
+        <strong>${model.modelName.replaceAll("_", " ")}</strong>
+        <small>${formatPercent(Number(model.accuracy || 0) * 100)} · ${formatNumber(model.trackedBridgeErrors || 0)} tracked bridge errors</small>
+      </div>
+      <span class="pill">${model.modelName === tournament.winner ? "winner" : "tested"}</span>
+    </div>
+  `).join("");
+}
+
 async function main() {
   initTheme();
-  const [reportResult, qualityResult, phasingResult, segmentsResult, validationResult] = await Promise.all([
+  const [reportResult, qualityResult, phasingResult, segmentsResult, validationResult, tournamentResult] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),
     loadJson("/data/phasing_qc.json", fallbackPhasing),
     loadJson("/data/chromosome_segments_hgdp.json", fallbackSegments),
     loadJson("/data/validation_hgdp_chr22.json", fallbackValidation),
+    loadJson("/data/model_tournament_hgdp_chr22.json", fallbackTournament),
   ]);
 
   const report = reportResult.data;
@@ -305,6 +333,7 @@ async function main() {
   const phasing = phasingResult.data;
   const segments = segmentsResult.data;
   const validation = validationResult.data;
+  const tournament = tournamentResult.data;
   const live = reportResult.source === "pipeline";
   document.querySelector("#dataStatus").textContent = live
     ? "Using exported pipeline JSON"
@@ -315,6 +344,7 @@ async function main() {
   renderChromosomes(phasing);
   renderLocalAncestry(segments);
   renderQuality(report, quality, validation);
+  renderTournament(tournament);
 }
 
 main().catch((error) => {

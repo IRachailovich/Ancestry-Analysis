@@ -570,6 +570,36 @@ main {
   margin-top: 10px;
 }
 
+.model-list {
+  display: grid;
+  gap: 10px;
+}
+
+.model-row {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: 34px 1fr auto;
+  padding: 12px 14px;
+}
+
+.model-row > span:first-child {
+  color: var(--teal);
+  font-weight: 760;
+}
+
+.model-row strong,
+.model-row small {
+  display: block;
+}
+
+.model-row small {
+  color: var(--muted);
+  margin-top: 3px;
+}
+
 @media (max-width: 860px) {
   .topbar,
   .summary {

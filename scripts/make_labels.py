@@ -68,6 +68,28 @@ HGDP_LOCAL = {
     "PapuanSepik": "Papuan_Sepik",
 }
 
+HGDP_BROAD = {
+    "Caucasus": "West_Eurasian",
+    "Central_African": "African",
+    "Central_Asian": "Central_Asian",
+    "East_African": "African",
+    "East_Asian": "East_Asian",
+    "Eastern_European": "European",
+    "Greater_Iranian": "West_Eurasian",
+    "Indigenous_American": "Indigenous_American",
+    "Middle_Eastern": "Middle_Eastern",
+    "North_African": "North_African",
+    "Northeast_Asian": "East_Asian",
+    "Oceanian": "Oceanian",
+    "Siberian": "North_Asian",
+    "South_Asian": "South_Asian",
+    "Southern_African": "African",
+    "Southern_African_Khoisan": "African",
+    "Southern_European": "European",
+    "West_African": "African",
+    "Western_European": "European",
+}
+
 KGP_POP = {
     "ACB": "African_Caribbean_Barbados",
     "ASW": "African_Ancestry_SW_US",
@@ -112,14 +134,22 @@ def local_label(population: str) -> str:
 
 def write_hgdp_labels(metadata: Path, outdir: Path) -> None:
     general_path = outdir / "hgdp_labels_general.tsv"
+    broad_path = outdir / "hgdp_labels_broad.tsv"
     local_path = outdir / "hgdp_labels_local.tsv"
     map_path = outdir / "hgdp_population_label_map.tsv"
 
-    with metadata.open(newline="") as handle, general_path.open("w", newline="") as gen_out, local_path.open("w", newline="") as loc_out:
+    with (
+        metadata.open(newline="") as handle,
+        general_path.open("w", newline="") as gen_out,
+        broad_path.open("w", newline="") as broad_out,
+        local_path.open("w", newline="") as loc_out,
+    ):
         reader = csv.DictReader(handle, delimiter="\t")
         gen = csv.writer(gen_out, delimiter="\t", lineterminator="\n")
+        broad = csv.writer(broad_out, delimiter="\t", lineterminator="\n")
         loc = csv.writer(loc_out, delimiter="\t", lineterminator="\n")
         gen.writerow(["sample", "population", "region", "label"])
+        broad.writerow(["sample", "population", "region", "label"])
         loc.writerow(["sample", "population", "region", "label"])
         seen = set()
         for row in reader:
@@ -128,7 +158,9 @@ def write_hgdp_labels(metadata: Path, outdir: Path) -> None:
                 raise SystemExit(f"No HGDP general label for population: {pop}")
             sample = row["sample"]
             region = row["region"]
-            gen.writerow([sample, pop, region, HGDP_GENERAL[pop]])
+            general = HGDP_GENERAL[pop]
+            gen.writerow([sample, pop, region, general])
+            broad.writerow([sample, pop, region, HGDP_BROAD[general]])
             loc.writerow([sample, pop, region, local_label(pop)])
             seen.add(pop)
 

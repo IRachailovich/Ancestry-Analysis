@@ -1,0 +1,162 @@
+{
+  "chrom": "hgdp.chr22.shared.reference.phased.vcf.gz",
+  "metric": "accuracy minus 0.02 per tracked bridge error; balanced recall tie-break",
+  "models": [
+    {
+      "accuracy": 0.7727,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 0,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 0,
+        "Western_European->Southern_European": 0
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "10.0",
+        "minMaf": "0.005",
+        "program": "FLARE"
+      },
+      "modelName": "flare_broad_first",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_broad_first",
+      "sampleCount": 22,
+      "trackedBridgeErrors": 0
+    },
+    {
+      "accuracy": 0.7568,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "10.0",
+        "minMaf": "0.005",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_default",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_default",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    },
+    {
+      "accuracy": 0.7568,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "10.0",
+        "minMaf": "0.0",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_minmaf_0",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_minmaf_0",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    },
+    {
+      "accuracy": 0.7568,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "10.0",
+        "minMaf": "0.001",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_minmaf_001",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_minmaf_001",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    },
+    {
+      "accuracy": 0.7568,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "5.0",
+        "minMaf": "0.005",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_gen_5",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_gen_5",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    },
+    {
+      "accuracy": 0.7568,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": false,
+        "extraFlareArgs": [],
+        "gen": "10.0",
+        "minMaf": "0.005",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_no_em",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_no_em",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    },
+    {
+      "accuracy": 0.7297,
+      "bridgePairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "modelConfig": {
+        "array": true,
+        "em": true,
+        "extraFlareArgs": [],
+        "gen": "20.0",
+        "minMaf": "0.005",
+        "program": "FLARE"
+      },
+      "modelName": "flare_flat_gen_20",
+      "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_gen_20",
+      "sampleCount": 37,
+      "trackedBridgeErrors": 4
+    }
+  ],
+  "schemaVersion": 1,
+  "winner": "flare_broad_first"
+}

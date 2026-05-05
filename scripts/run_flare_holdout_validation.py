@@ -9,6 +9,24 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 
+DEFAULT_BRIDGE_PAIRS = [
+    ("Middle_Eastern", "Southern_European"),
+    ("Western_European", "Southern_European"),
+    ("Caucasus", "Southern_European"),
+    ("Greater_Iranian", "South_Asian"),
+    ("South_Asian", "Greater_Iranian"),
+]
+
+
+def parse_bool(value: str) -> bool:
+    lowered = value.lower()
+    if lowered in {"1", "true", "yes", "y"}:
+        return True
+    if lowered in {"0", "false", "no", "n"}:
+        return False
+    raise argparse.ArgumentTypeError(f"Expected boolean value, got {value}")
+
+
 def read_labels(path: Path, label_column: str) -> list[dict[str, str]]:
     with path.open(newline="") as handle:
         reader = csv.DictReader(handle, delimiter="\t")
@@ -126,6 +144,21 @@ def write_confusion(path: Path, predictions: list[dict[str, str]]) -> dict[str, 
     }
 
 
+def bridge_errors(predictions: list[dict[str, str]], pairs: list[tuple[str, str]]) -> dict[str, object]:
+    pair_counts = {}
+    total = 0
+    for true_label, predicted_label in pairs:
+        count = sum(1 for row in predictions if row["true_label"] == true_label and row["predicted_label"] == predicted_label)
+        pair_counts[f"{true_label}->{predicted_label}"] = count
+        total += count
+    southern_attractor = Counter(row["true_label"] for row in predictions if row["predicted_label"] == "Southern_European" and row["true_label"] != "Southern_European")
+    return {
+        "totalTrackedBridgeErrors": total,
+        "pairs": pair_counts,
+        "nonSouthernEuropeanToSouthernEuropean": dict(sorted(southern_attractor.items())),
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run unbiased FLARE holdout validation on known reference samples.")
     parser.add_argument("--phased-reference-vcf", required=True, type=Path)
@@ -139,6 +172,12 @@ def main() -> None:
     parser.add_argument("--threads", type=int, default=4)
     parser.add_argument("--memory-gb", type=int, default=6)
     parser.add_argument("--seed", type=int, default=20260505)
+    parser.add_argument("--model-name", default="flare_flat_default")
+    parser.add_argument("--min-maf", default="0.005")
+    parser.add_argument("--gen", default="10.0")
+    parser.add_argument("--em", type=parse_bool, default=True)
+    parser.add_argument("--array", dest="array_mode", type=parse_bool, default=True)
+    parser.add_argument("--extra-flare-arg", action="append", default=[])
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
@@ -184,9 +223,13 @@ def main() -> None:
             f"map={args.map}",
             f"out={out_prefix}",
             "probs=true",
-            "array=true",
+            f"array={str(args.array_mode).lower()}",
+            f"min-maf={args.min_maf}",
+            f"gen={args.gen}",
+            f"em={str(args.em).lower()}",
             f"nthreads={args.threads}",
             f"seed={args.seed}",
+            *args.extra_flare_arg,
         ], args.dry_run)
 
     if args.dry_run:
@@ -197,11 +240,21 @@ def main() -> None:
     summary = write_confusion(args.outdir / "confusion_matrix.tsv", predictions)
     summary.update({
         "schemaVersion": 1,
+        "modelName": args.model_name,
         "phasedReferenceVcf": str(args.phased_reference_vcf),
         "labelColumn": args.label_column,
         "samplesPerLabel": args.samples_per_label,
         "minRefSamples": args.min_ref_samples,
         "seed": args.seed,
+        "modelConfig": {
+            "program": "FLARE",
+            "minMaf": args.min_maf,
+            "gen": args.gen,
+            "em": args.em,
+            "array": args.array_mode,
+            "extraFlareArgs": args.extra_flare_arg,
+        },
+        "bridgeErrors": bridge_errors(predictions, DEFAULT_BRIDGE_PAIRS),
         "labelCounts": dict(sorted(Counter(row[args.label_column] for row in rows).items())),
     })
     (args.outdir / "summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
