@@ -86,7 +86,7 @@ function renderDatasets(report) {
     const rate = dataset.compatibleRatePct ?? 0;
     const row = document.createElement("div");
     row.className = "dataset-row";
-    group.innerHTML = `
+    row.innerHTML = `
       <div>
         <div class="dataset-title">${dataset.displayName}</div>
         <div class="dataset-meta">${formatNumber(dataset.referenceSampleCount)} reference samples · ${formatNumber(dataset.referenceLabelCount)} labels</div>
@@ -155,7 +155,7 @@ function renderChromosomes(phasing) {
     const totalHets = rows.length
       ? Object.values(phasing.datasets?.[dataset] || {}).reduce((sum, row) => sum + Number(row.heterozygousVariants || 0), 0)
       : 0;
-    row.innerHTML = `
+    group.innerHTML = `
       <div class="chromosome-group-heading">
         <div>
           <strong>${datasetLabel(dataset)}</strong>
@@ -214,4 +214,14 @@ async function main() {
   renderQuality(report, quality);
 }
 
-main();
+main().catch((error) => {
+  console.error(error);
+  const status = document.querySelector("#dataStatus");
+  const chromosomes = document.querySelector("#chromosomeStack");
+  if (status) {
+    status.textContent = "App render error";
+  }
+  if (chromosomes) {
+    chromosomes.innerHTML = `<p class="empty-state">${error.message}</p>`;
+  }
+});
