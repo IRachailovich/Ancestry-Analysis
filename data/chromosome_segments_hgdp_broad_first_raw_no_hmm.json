@@ -1,0 +1,305 @@
+{
+  "chromosomes": {
+    "22": [
+      {
+        "confidence": 0.8226,
+        "copy": "1",
+        "end": 33041593,
+        "label": "European",
+        "snpCount": 3077,
+        "source": "flare_hgdp",
+        "start": 16391821
+      },
+      {
+        "confidence": 0.528,
+        "copy": "1",
+        "end": 33118147,
+        "label": "African",
+        "snpCount": 25,
+        "source": "flare_hgdp",
+        "start": 33045891
+      },
+      {
+        "confidence": 0.8373,
+        "copy": "1",
+        "end": 36237406,
+        "label": "European",
+        "snpCount": 590,
+        "source": "flare_hgdp",
+        "start": 33119101
+      },
+      {
+        "confidence": 0.8897,
+        "copy": "1",
+        "end": 36666969,
+        "label": "African",
+        "snpCount": 102,
+        "source": "flare_hgdp",
+        "start": 36237815
+      },
+      {
+        "confidence": 0.6037,
+        "copy": "1",
+        "end": 36969311,
+        "label": "European",
+        "snpCount": 95,
+        "source": "flare_hgdp",
+        "start": 36682131
+      },
+      {
+        "confidence": 0.5863,
+        "copy": "1",
+        "end": 37282524,
+        "label": "African",
+        "snpCount": 95,
+        "source": "flare_hgdp",
+        "start": 36971887
+      },
+      {
+        "confidence": 0.7945,
+        "copy": "1",
+        "end": 38469216,
+        "label": "European",
+        "snpCount": 223,
+        "source": "flare_hgdp",
+        "start": 37290861
+      },
+      {
+        "confidence": 0.485,
+        "copy": "1",
+        "end": 38650849,
+        "label": "African",
+        "snpCount": 22,
+        "source": "flare_hgdp",
+        "start": 38469858
+      },
+      {
+        "confidence": 0.8709,
+        "copy": "1",
+        "end": 42188912,
+        "label": "European",
+        "snpCount": 428,
+        "source": "flare_hgdp",
+        "start": 38686407
+      },
+      {
+        "confidence": 0.6804,
+        "copy": "1",
+        "end": 42475109,
+        "label": "African",
+        "snpCount": 45,
+        "source": "flare_hgdp",
+        "start": 42207808
+      },
+      {
+        "confidence": 0.6537,
+        "copy": "1",
+        "end": 43244722,
+        "label": "European",
+        "snpCount": 147,
+        "source": "flare_hgdp",
+        "start": 42479367
+      },
+      {
+        "confidence": 0.5092,
+        "copy": "1",
+        "end": 43268659,
+        "label": "African",
+        "snpCount": 13,
+        "source": "flare_hgdp",
+        "start": 43249127
+      },
+      {
+        "confidence": 0.867,
+        "copy": "1",
+        "end": 44166876,
+        "label": "European",
+        "snpCount": 198,
+        "source": "flare_hgdp",
+        "start": 43271417
+      },
+      {
+        "confidence": 0.7933,
+        "copy": "1",
+        "end": 44365434,
+        "label": "African",
+        "snpCount": 86,
+        "source": "flare_hgdp",
+        "start": 44167798
+      },
+      {
+        "confidence": 0.9006,
+        "copy": "1",
+        "end": 50749012,
+        "label": "European",
+        "snpCount": 1827,
+        "source": "flare_hgdp",
+        "start": 44367397
+      },
+      {
+        "confidence": 0.9309,
+        "copy": "2",
+        "end": 16927569,
+        "label": "African",
+        "snpCount": 47,
+        "source": "flare_hgdp",
+        "start": 16391821
+      },
+      {
+        "confidence": 0.7825,
+        "copy": "2",
+        "end": 19652883,
+        "label": "European",
+        "snpCount": 520,
+        "source": "flare_hgdp",
+        "start": 16933750
+      },
+      {
+        "confidence": 0.7811,
+        "copy": "2",
+        "end": 21016938,
+        "label": "North_Asian",
+        "snpCount": 270,
+        "source": "flare_hgdp",
+        "start": 19655722
+      },
+      {
+        "confidence": 0.8583,
+        "copy": "2",
+        "end": 32778780,
+        "label": "European",
+        "snpCount": 2190,
+        "source": "flare_hgdp",
+        "start": 21022782
+      },
+      {
+        "confidence": 0.5221,
+        "copy": "2",
+        "end": 32954955,
+        "label": "African",
+        "snpCount": 38,
+        "source": "flare_hgdp",
+        "start": 32781206
+      },
+      {
+        "confidence": 0.8694,
+        "copy": "2",
+        "end": 36435659,
+        "label": "European",
+        "snpCount": 679,
+        "source": "flare_hgdp",
+        "start": 32970066
+      },
+      {
+        "confidence": 0.7144,
+        "copy": "2",
+        "end": 36964375,
+        "label": "African",
+        "snpCount": 144,
+        "source": "flare_hgdp",
+        "start": 36441020
+      },
+      {
+        "confidence": 0.5376,
+        "copy": "2",
+        "end": 37162316,
+        "label": "European",
+        "snpCount": 55,
+        "source": "flare_hgdp",
+        "start": 36969311
+      },
+      {
+        "confidence": 0.9277,
+        "copy": "2",
+        "end": 38307648,
+        "label": "African",
+        "snpCount": 237,
+        "source": "flare_hgdp",
+        "start": 37164130
+      },
+      {
+        "confidence": 0.8018,
+        "copy": "2",
+        "end": 42188912,
+        "label": "European",
+        "snpCount": 477,
+        "source": "flare_hgdp",
+        "start": 38319217
+      },
+      {
+        "confidence": 0.8521,
+        "copy": "2",
+        "end": 43228299,
+        "label": "African",
+        "snpCount": 184,
+        "source": "flare_hgdp",
+        "start": 42207808
+      },
+      {
+        "confidence": 0.635,
+        "copy": "2",
+        "end": 44359083,
+        "label": "European",
+        "snpCount": 299,
+        "source": "flare_hgdp",
+        "start": 43233512
+      },
+      {
+        "confidence": 0.5724,
+        "copy": "2",
+        "end": 44432197,
+        "label": "African",
+        "snpCount": 38,
+        "source": "flare_hgdp",
+        "start": 44361191
+      },
+      {
+        "confidence": 0.8729,
+        "copy": "2",
+        "end": 46719928,
+        "label": "European",
+        "snpCount": 597,
+        "source": "flare_hgdp",
+        "start": 44437775
+      },
+      {
+        "confidence": 0.6936,
+        "copy": "2",
+        "end": 47484413,
+        "label": "African",
+        "snpCount": 178,
+        "source": "flare_hgdp",
+        "start": 46741886
+      },
+      {
+        "confidence": 0.4783,
+        "copy": "2",
+        "end": 47565959,
+        "label": "European",
+        "snpCount": 23,
+        "source": "flare_hgdp",
+        "start": 47489676
+      },
+      {
+        "confidence": 0.746,
+        "copy": "2",
+        "end": 48785864,
+        "label": "African",
+        "snpCount": 390,
+        "source": "flare_hgdp",
+        "start": 47578200
+      },
+      {
+        "confidence": 0.7165,
+        "copy": "2",
+        "end": 50749012,
+        "label": "European",
+        "snpCount": 607,
+        "source": "flare_hgdp",
+        "start": 48793421
+      }
+    ]
+  },
+  "schemaVersion": 1,
+  "smoothingProfile": "broad_first_raw_no_hmm"
+}

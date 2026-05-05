@@ -12,122 +12,96 @@
         <p class="eyebrow">Genetic ancestry analysis</p>
         <h1>Personal ancestry report</h1>
       </div>
-      <nav aria-label="Main views">
-        <a href="#report">Report</a>
-        <a href="#chromosomes">Chromosomes</a>
-        <a href="#map">Explore</a>
-        <a href="#quality">Quality</a>
+      <nav class="tab-nav" aria-label="Main views">
+        <button class="tab-button active" type="button" data-tab="report">Report</button>
+        <button class="tab-button" type="button" data-tab="sample">Sample models</button>
+        <button class="tab-button" type="button" data-tab="validation">Validation</button>
+        <button class="tab-button" type="button" data-tab="quality">Quality</button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">Dark</button>
       </nav>
     </header>
 
     <main>
-      <section class="summary" id="report">
-        <div class="summary-copy">
-          <p class="eyebrow">Option 5 direction</p>
-          <h2>Personal ancestry report, with the analysis details still close at hand.</h2>
-          <p>
-            This report uses Option 5 as the main experience: clear ancestry results,
-            phased chromosomes, reference-set quality, and room for probabilistic ancestry calls.
-          </p>
-        </div>
-        <div class="status-panel" aria-live="polite">
-          <span class="status-dot"></span>
-          <span id="dataStatus">Loading report data</span>
-        </div>
+      <section class="tab-panel active" data-tab-panel="report">
+        <section class="summary" id="report">
+          <div class="summary-copy">
+            <p class="eyebrow">Option 5 direction</p>
+            <h2>Personal ancestry report, with the analysis details still close at hand.</h2>
+            <p>
+              This report uses Option 5 as the main experience: clear ancestry results,
+              phased chromosomes, reference-set quality, and room for probabilistic ancestry calls.
+            </p>
+          </div>
+          <div class="status-panel" aria-live="polite">
+            <span class="status-dot"></span>
+            <span id="dataStatus">Loading report data</span>
+          </div>
+        </section>
+
+        <section class="metrics" aria-label="Report summary metrics">
+          <article><span>Sample</span><strong id="sampleName">-</strong></article>
+          <article><span>23andMe rsID calls</span><strong id="usableCalls">-</strong></article>
+          <article><span>Reference sets</span><strong id="datasetCount">-</strong></article>
+          <article><span>Primary UI</span><strong id="uiDirection">-</strong></article>
+        </section>
+
+        <section class="layout-grid">
+          <article class="panel span-7">
+            <div class="panel-heading"><div><p class="eyebrow">Reference readiness</p><h3>Pipeline datasets</h3></div></div>
+            <div class="dataset-list" id="datasetList"></div>
+          </article>
+
+          <article class="panel span-5" id="map">
+            <div class="panel-heading"><div><p class="eyebrow">Option 2 as a tab</p><h3>Explore map</h3></div></div>
+            <div class="map-shell">
+              <div class="arc arc-one"></div><div class="arc arc-two"></div>
+              <span class="pin pin-a"></span><span class="pin pin-b"></span><span class="pin pin-c"></span>
+            </div>
+          </article>
+        </section>
       </section>
 
-      <section class="metrics" aria-label="Report summary metrics">
-        <article>
-          <span>Sample</span>
-          <strong id="sampleName">-</strong>
-        </article>
-        <article>
-          <span>23andMe rsID calls</span>
-          <strong id="usableCalls">-</strong>
-        </article>
-        <article>
-          <span>Reference sets</span>
-          <strong id="datasetCount">-</strong>
-        </article>
-        <article>
-          <span>Primary UI</span>
-          <strong id="uiDirection">-</strong>
-        </article>
-      </section>
+      <section class="tab-panel" data-tab-panel="sample">
+        <section class="layout-grid">
+          <article class="panel span-5">
+            <div class="panel-heading"><div><p class="eyebrow">Current sample</p><h3>Model output summary</h3></div></div>
+            <div class="ancestry-breakdown" id="ancestryBreakdown"></div>
+          </article>
+          <article class="panel span-7">
+            <div class="panel-heading"><div><p class="eyebrow">Probabilistic models</p><h3>Sample model comparison</h3></div></div>
+            <div class="model-output-list" id="sampleModelOutputs"></div>
+          </article>
+        </section>
 
-      <section class="layout-grid">
-        <article class="panel span-7">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Reference readiness</p>
-              <h3>Pipeline datasets</h3>
-            </div>
-          </div>
-          <div class="dataset-list" id="datasetList"></div>
-        </article>
+        <section class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Per chromosome and copy</p><h3>Haplotype-copy diagnostics</h3></div></div>
+          <div class="copy-diagnostics" id="copyDiagnostics"></div>
+        </section>
 
-        <article class="panel span-5">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Report composition</p>
-              <h3>Ancestry overview</h3>
-            </div>
-          </div>
-          <div class="rings" aria-hidden="true">
-            <div class="ring ring-large"></div>
-            <div class="ring ring-small"></div>
-          </div>
-          <div class="ancestry-breakdown" id="ancestryBreakdown"></div>
-        </article>
-      </section>
-
-      <section class="layout-grid">
-        <article class="panel span-5" id="chromosomes">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Chromosome view</p>
-              <h3>Phased autosomes</h3>
-            </div>
-          </div>
+        <section class="panel" id="chromosomes">
+          <div class="panel-heading"><div><p class="eyebrow">Chromosome view</p><h3>Phased autosomes</h3></div></div>
           <div class="chromosome-stack" id="chromosomeStack"></div>
-        </article>
-
-        <article class="panel span-7" id="map">
-          <div class="panel-heading">
-            <div>
-              <p class="eyebrow">Option 2 as a tab</p>
-              <h3>Explore map</h3>
-            </div>
-          </div>
-          <div class="map-shell">
-            <div class="arc arc-one"></div>
-            <div class="arc arc-two"></div>
-            <span class="pin pin-a"></span>
-            <span class="pin pin-b"></span>
-            <span class="pin pin-c"></span>
-          </div>
-        </article>
+        </section>
       </section>
 
-      <section class="panel" id="quality">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Analysis quality</p>
-            <h3>Shared SNP compatibility</h3>
-          </div>
-        </div>
-        <div class="quality-grid" id="qualityGrid"></div>
+      <section class="tab-panel" data-tab-panel="validation">
+        <section class="layout-grid">
+          <article class="panel span-5">
+            <div class="panel-heading"><div><p class="eyebrow">Holdout validation</p><h3>Bridge errors</h3></div></div>
+            <div class="validation-details" id="validationDetails"></div>
+          </article>
+          <article class="panel span-7">
+            <div class="panel-heading"><div><p class="eyebrow">Model validation</p><h3>Model tournament</h3></div></div>
+            <div class="model-list" id="modelTournament"></div>
+          </article>
+        </section>
       </section>
 
-      <section class="panel">
-        <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Model validation</p>
-            <h3>Model tournament</h3>
-          </div>
-        </div>
-        <div class="model-list" id="modelTournament"></div>
+      <section class="tab-panel" data-tab-panel="quality">
+        <section class="panel" id="quality">
+          <div class="panel-heading"><div><p class="eyebrow">Analysis quality</p><h3>Shared SNP compatibility</h3></div></div>
+          <div class="quality-grid" id="qualityGrid"></div>
+        </section>
       </section>
 
     </main>

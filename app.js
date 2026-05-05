@@ -59,6 +59,16 @@ const fallbackTournament = {
   models: [],
 };
 
+const fallbackValidationDashboard = {
+  holdout: {},
+  tournament: {},
+};
+
+const fallbackSampleModelOutputs = {
+  models: [],
+  metaModel: {},
+};
+
 function applyTheme(theme) {
   const resolved = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = resolved;
@@ -77,6 +87,18 @@ function initTheme() {
     const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
     localStorage.setItem("ancestry-theme", next);
     applyTheme(next);
+  });
+}
+
+function initTabs() {
+  document.querySelectorAll("[data-tab]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const selected = button.dataset.tab;
+      document.querySelectorAll("[data-tab]").forEach((item) => item.classList.toggle("active", item.dataset.tab === selected));
+      document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
+        panel.classList.toggle("active", panel.dataset.tabPanel === selected);
+      });
+    });
   });
 }
 
@@ -317,15 +339,135 @@ function renderTournament(tournament) {
   `).join("");
 }
 
+function renderValidationDetails(dashboard) {
+  const box = document.querySelector("#validationDetails");
+  const holdout = dashboard.holdout || {};
+  const bridge = holdout.bridgeErrors || {};
+  const pairs = bridge.pairs || {};
+  const errors = holdout.errors || [];
+  const southern = holdout.southernEuropeanAttractorErrors || [];
+  const independent = dashboard.independentModels || [];
+  const synthetic = dashboard.syntheticValidation?.rfmixDefaultStrict;
+  const gridModels = dashboard.parameterGrid?.models || [];
+  box.innerHTML = `
+    <div class="quality-grid">
+      <article><span>Holdout accuracy</span><strong>${formatPercent(Number(holdout.accuracy || 0) * 100)}</strong><span>${formatNumber(holdout.sampleCount || 0)} known samples</span></article>
+      <article><span>Total errors</span><strong>${formatNumber(holdout.errorCount || errors.length)}</strong><span>chr22 validation</span></article>
+      <article><span>Southern attractor</span><strong>${formatNumber(southern.length)}</strong><span>non-Southern labels called Southern</span></article>
+    </div>
+    <div class="model-list">
+      ${Object.entries(pairs).map(([pair, count]) => `
+        <div class="bridge-row"><div><strong>${pair.replaceAll("_", " ")}</strong><small>tracked bridge pair</small></div><strong>${formatNumber(count)}</strong></div>
+      `).join("")}
+    </div>
+    <div class="model-list">
+      ${independent.map((model) => `
+        <div class="bridge-row">
+          <div><strong>${model.displayName}</strong><small>${(model.status || "pending").replaceAll("_", " ")}</small></div>
+          <strong>${model.accuracy === null || model.accuracy === undefined ? "Pending" : formatPercent(Number(model.accuracy) * 100)}</strong>
+        </div>
+      `).join("")}
+      ${synthetic ? `
+        <div class="bridge-row">
+          <div><strong>RFMix synthetic mixtures</strong><small>${synthetic.status.replaceAll("_", " ")}</small></div>
+          <strong>${Number(synthetic.meanMixtureAbsError).toFixed(3)}</strong>
+        </div>
+      ` : ""}
+      ${gridModels.map((model) => `
+        <div class="bridge-row">
+          <div><strong>${model.preset.replaceAll("_", " ")}</strong><small>RFMix parameter check · ${formatNumber(model.trackedBridgeErrors)} bridge errors</small></div>
+          <strong>${model.accuracy === null || model.accuracy === undefined ? Number(model.meanMixtureAbsError).toFixed(3) : formatPercent(Number(model.accuracy) * 100)}</strong>
+        </div>
+      `).join("")}
+    </div>
+    <div class="model-list">
+      ${errors.slice(0, 8).map((row) => `
+        <div class="bridge-row">
+          <div><strong>${row.trueLabel.replaceAll("_", " ")} -> ${row.predictedLabel.replaceAll("_", " ")}</strong><small>${row.sample}</small></div>
+          <strong>${formatPercent(Number(row.topProbability || 0) * 100)}</strong>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function renderSampleModelOutputs(outputs) {
+  const list = document.querySelector("#sampleModelOutputs");
+  const copies = document.querySelector("#copyDiagnostics");
+  const models = outputs.models || [];
+  const meta = outputs.metaModel || {};
+  if (!models.length) {
+    list.innerHTML = '<p class="empty-state">Sample model outputs will appear after model runs.</p>';
+    copies.innerHTML = '<p class="empty-state">Copy-specific diagnostics will appear after model runs.</p>';
+    return;
+  }
+  const metaHtml = `
+    <div class="output-row meta-output">
+      <div>
+        <strong>Meta-model</strong>
+        <small>${(meta.status || "provisional").replaceAll("_", " ")}</small>
+      </div>
+      <div>
+        ${(meta.topConsensus || []).slice(0, 5).map((item) => `
+          <div class="ancestry-row">
+            <span><i class="swatch ${labelClass(item.label)}"></i>${item.label.replaceAll("_", " ")}</span>
+            <div class="bar"><i style="width: ${Math.max(3, Number(item.probability || 0))}%"></i></div>
+            <strong>${formatPercent(item.probability)}</strong>
+          </div>
+        `).join("")}
+        <div class="ancestry-note">${meta.labelPolicy?.reason || "Final labels require validation."}</div>
+      </div>
+    </div>
+  `;
+  list.innerHTML = metaHtml + models.map((model) => `
+    <div class="output-row">
+      <div><strong>${model.displayName}</strong><small>${model.id.replaceAll("_", " ")}</small></div>
+      <div>
+        ${(model.globalTop || []).slice(0, 5).map((item) => `
+          <div class="ancestry-row">
+            <span><i class="swatch ${labelClass(item.label)}"></i>${item.label.replaceAll("_", " ")}</span>
+            <div class="bar"><i style="width: ${Math.max(3, Number(item.probability || 0))}%"></i></div>
+            <strong>${formatPercent(item.probability)}</strong>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `).join("");
+
+  copies.innerHTML = models.map((model) => `
+    <div class="output-row">
+      <div><strong>${model.displayName}</strong><small>copy-specific chr22 proportions</small></div>
+      <div>
+        ${Object.entries(model.segments?.perCopy || {}).map(([copy, labels]) => {
+          const top = Object.entries(labels).slice(0, 4);
+          return `<div class="ancestry-note">copy ${copy}: ${top.map(([label, pct]) => `${label.replaceAll("_", " ")} ${formatPercent(pct)}`).join(" · ")}</div>`;
+        }).join("")}
+      </div>
+    </div>
+  `).join("");
+}
+
 async function main() {
   initTheme();
-  const [reportResult, qualityResult, phasingResult, segmentsResult, validationResult, tournamentResult] = await Promise.all([
+  initTabs();
+  const [
+    reportResult,
+    qualityResult,
+    phasingResult,
+    segmentsResult,
+    validationResult,
+    tournamentResult,
+    validationDashboardResult,
+    sampleModelOutputsResult,
+  ] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),
     loadJson("/data/phasing_qc.json", fallbackPhasing),
     loadJson("/data/chromosome_segments_hgdp.json", fallbackSegments),
     loadJson("/data/validation_hgdp_chr22.json", fallbackValidation),
     loadJson("/data/model_tournament_hgdp_chr22.json", fallbackTournament),
+    loadJson("/data/validation_dashboard.json", fallbackValidationDashboard),
+    loadJson("/data/sample_model_outputs.json", fallbackSampleModelOutputs),
   ]);
 
   const report = reportResult.data;
@@ -334,6 +476,8 @@ async function main() {
   const segments = segmentsResult.data;
   const validation = validationResult.data;
   const tournament = tournamentResult.data;
+  const validationDashboard = validationDashboardResult.data;
+  const sampleModelOutputs = sampleModelOutputsResult.data;
   const live = reportResult.source === "pipeline";
   document.querySelector("#dataStatus").textContent = live
     ? "Using exported pipeline JSON"
@@ -345,6 +489,8 @@ async function main() {
   renderLocalAncestry(segments);
   renderQuality(report, quality, validation);
   renderTournament(tournament);
+  renderValidationDetails(validationDashboard);
+  renderSampleModelOutputs(sampleModelOutputs);
 }
 
 main().catch((error) => {

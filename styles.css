@@ -83,12 +83,12 @@ h3 {
   font-size: 21px;
 }
 
-nav {
+.tab-nav {
   display: flex;
   gap: 6px;
 }
 
-nav a,
+.tab-button,
 .theme-toggle {
   border-radius: 999px;
   color: var(--slate);
@@ -97,8 +97,20 @@ nav a,
   text-decoration: none;
 }
 
-nav a:hover,
+.tab-button {
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.tab-button:hover,
 .theme-toggle:hover {
+  background: var(--soft);
+  color: var(--ink);
+}
+
+.tab-button.active {
   background: var(--soft);
   color: var(--ink);
 }
@@ -116,6 +128,15 @@ main {
   margin: 0 auto;
   max-width: 1240px;
   padding: 30px clamp(18px, 4vw, 56px) 60px;
+}
+
+.tab-panel {
+  display: none;
+  gap: 18px;
+}
+
+.tab-panel.active {
+  display: grid;
 }
 
 .eyebrow {
@@ -575,7 +596,9 @@ main {
   gap: 10px;
 }
 
-.model-row {
+.model-row,
+.output-row,
+.bridge-row {
   align-items: center;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -598,6 +621,32 @@ main {
 .model-row small {
   color: var(--muted);
   margin-top: 3px;
+}
+
+.model-output-list,
+.copy-diagnostics,
+.validation-details {
+  display: grid;
+  gap: 10px;
+}
+
+.output-row {
+  grid-template-columns: minmax(160px, 1fr) 1.4fr;
+}
+
+.meta-output {
+  background: var(--soft);
+}
+
+.bridge-row {
+  grid-template-columns: minmax(180px, 1fr) 64px;
+}
+
+.output-row small,
+.bridge-row small {
+  color: var(--muted);
+  display: block;
+  margin-top: 4px;
 }
 
 @media (max-width: 860px) {

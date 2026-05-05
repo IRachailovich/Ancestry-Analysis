@@ -13,6 +13,8 @@ Steps:
 7. Optionally phase the HGDP reference panel itself with EAGLE2 so FLARE has a phased reference.
 8. Optionally run FLARE for probabilistic local ancestry, using phased target haplotypes and phased reference haplotypes.
 9. Smooth FLARE local ancestry segments with an HMM and publish chromosome-painting JSON.
+10. Optionally run RFMix as an independent local ancestry comparator.
+11. Optionally create synthetic admixed targets for validation/calibration only; these are never used as reference samples by default.
 
 Run from WSL:
 
@@ -35,6 +37,8 @@ The default run now produces UI-ready JSON even before EAGLE2 runs. It writes th
 - `/mnt/d/Python/Genetics/data/reference_labels.json`
 - `/mnt/d/Python/Genetics/data/eagle_results_index.json`
 - `/mnt/d/Python/Genetics/data/phasing_qc.json`
+- `/mnt/d/Python/Genetics/data/validation_dashboard.json`
+- `/mnt/d/Python/Genetics/data/sample_model_outputs.json`
 
 EAGLE2 is installed at `/usr/local/bin/eagle2` from the official Broad/AlkesGroup v2.4.1 bundle. Eagle2 is the default algorithm; the pipeline never passes `--v1`.
 
@@ -125,6 +129,71 @@ Output:
 /mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/model_tournament_summary.json
 /mnt/d/Python/Genetics/data/model_tournament_hgdp_chr22.json
 ```
+
+## RFMix Comparator
+
+RFMix is available as an independent local ancestry model. It should be interpreted as a comparator until it passes the same holdout validation standard as FLARE. RFMix v2 has non-commercial academic research licensing terms, so check those terms before any other use.
+
+Run a chr22 comparator:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_RFMIX=1 RFMIX_CHROMS=22 THREADS=4 FLARE_THREADS=4 bash run_pipeline_wsl.sh
+```
+
+Outputs:
+
+```bash
+/mnt/f/data/processed/genetics_eagle/results/rfmix/hgdp_general/MY_SAMPLE.hgdp.chr22.rfmix.rfmix.Q
+/mnt/f/data/processed/genetics_eagle/results/rfmix/hgdp_general/MY_SAMPLE.hgdp.chr22.rfmix.msp.tsv
+/mnt/d/Python/Genetics/data/sample_model_outputs.json
+```
+
+Run RFMix holdout validation:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_RFMIX_VALIDATE=1 RFMIX_VALIDATE_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+```
+
+Run a small RFMix parameter grid. The grid compares holdout accuracy, tracked bridge errors, and synthetic-mixture calibration:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_RFMIX_GRID=1 RFMIX_VALIDATE_CHROMS=22 RFMIX_GRID_PRESETS=default,shorter_windows bash run_pipeline_wsl.sh
+```
+
+Current chr22 diagnostic results:
+
+- RFMix default holdout: 72.97% accuracy, 1 tracked bridge error.
+- RFMix shorter windows: 62.16% accuracy, 2 tracked bridge errors.
+- Strict synthetic mixtures exclude the synthetic source parents from the reference panel; this avoids parent recognition and is the valid calibration mode.
+
+## Synthetic Admixed Validation Targets
+
+Synthetic mixtures are for validation and calibration only. They are deliberately not added to the reference panel by the pipeline.
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_SIMULATIONS=1 SIMULATION_CHROMS=22 bash run_pipeline_wsl.sh
+```
+
+Outputs:
+
+```bash
+/mnt/f/data/processed/genetics_eagle/results/simulations/hgdp/chr22/synthetic_admixed_chr22.vcf.gz
+/mnt/f/data/processed/genetics_eagle/results/simulations/hgdp/chr22/synthetic_admixed_truth.tsv
+```
+
+## App Tabs
+
+The app now separates interpretation from validation:
+
+- Sample models: FLARE flat, FLARE broad-first, RFMix, probability-level meta-model, and haplotype-copy diagnostics.
+- Validation: holdout accuracy, bridge-error counts, attractor errors, and model tournament results.
+- Quality: shared SNP compatibility and build/reference checks.
+
+Fine ancestry labels are not considered final until they pass autosome-wide validation. Current chr22 outputs are diagnostic.
 
 ## HMM Smoothing
 

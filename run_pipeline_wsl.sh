@@ -17,9 +17,37 @@ PHASE_HGDP_REF="${PHASE_HGDP_REF:-1}"
 VALIDATE_CHROMS="${VALIDATE_CHROMS:-22}"
 VALIDATION_SAMPLES_PER_LABEL="${VALIDATION_SAMPLES_PER_LABEL:-2}"
 TOURNAMENT_CHROMS="${TOURNAMENT_CHROMS:-22}"
+BROAD_FIRST_CHROMS="${BROAD_FIRST_CHROMS:-22}"
+RFMIX_CHROMS="${RFMIX_CHROMS:-22}"
+RFMIX_VALIDATE_CHROMS="${RFMIX_VALIDATE_CHROMS:-22}"
+SIMULATION_CHROMS="${SIMULATION_CHROMS:-22}"
 
 mkdir -p "$OUT"/{metadata,work,logs,results}
 mkdir -p "$APP_DATA_DIR"
+
+publish_dashboards() {
+  if [[ -s "$OUT/results/validation/hgdp/chr22/summary.json" && -s "$OUT/results/validation/hgdp/chr22/predictions.tsv" && -s "$OUT/results/model_tournament/hgdp/chr22/model_tournament_summary.json" ]]; then
+    python3 "$REPO/scripts/build_validation_dashboard.py" \
+      --validation-summary "$OUT/results/validation/hgdp/chr22/summary.json" \
+      --predictions "$OUT/results/validation/hgdp/chr22/predictions.tsv" \
+      --tournament-summary "$OUT/results/model_tournament/hgdp/chr22/model_tournament_summary.json" \
+      --rfmix-summary "$OUT/results/rfmix_validation/hgdp/chr22/summary.json" \
+      --rfmix-synthetic-summary "$OUT/results/rfmix_synthetic_validation/hgdp/chr22/default_exclude_sources/default_exclude_sources.summary.json" \
+      --rfmix-grid-summary "$OUT/results/rfmix_parameter_grid/hgdp/chr22/summary.json" \
+      --out "$APP_DATA_DIR/validation_dashboard.json"
+  fi
+
+  if [[ -s "$OUT/results/flare/hgdp/MY_SAMPLE.hgdp.chr22.flare.global.anc.gz" && -s "$OUT/results/segments/segments_hgdp_raw_no_hmm.tsv" && -s "$OUT/results/flare_broad_first/hgdp/MY_SAMPLE.hgdp.chr22.flare.global.anc.gz" && -s "$OUT/results/segments/segments_hgdp_broad_first_raw_no_hmm.tsv" ]]; then
+    python3 "$REPO/scripts/build_sample_model_outputs.py" \
+      --flat-global "$OUT/results/flare/hgdp/MY_SAMPLE.hgdp.chr22.flare.global.anc.gz" \
+      --flat-segments "$OUT/results/segments/segments_hgdp_raw_no_hmm.tsv" \
+      --broad-global "$OUT/results/flare_broad_first/hgdp/MY_SAMPLE.hgdp.chr22.flare.global.anc.gz" \
+      --broad-segments "$OUT/results/segments/segments_hgdp_broad_first_raw_no_hmm.tsv" \
+      --rfmix-q "$OUT/results/rfmix/hgdp_general/MY_SAMPLE.hgdp.chr22.rfmix.rfmix.Q" \
+      --rfmix-msp "$OUT/results/rfmix/hgdp_general/MY_SAMPLE.hgdp.chr22.rfmix.msp.tsv" \
+      --out "$APP_DATA_DIR/sample_model_outputs.json"
+  fi
+}
 
 python3 "$REPO/scripts/make_labels.py" \
   --hgdp-metadata "$RAW/hgdp/hgdp_wgs.20190516.metadata.txt" \
@@ -73,6 +101,7 @@ if [[ "${RUN_TOURNAMENT:-0}" == "1" ]]; then
 
     cp "$OUT/results/model_tournament/hgdp/chr${chrom}/model_tournament_summary.json" "$APP_DATA_DIR/model_tournament_hgdp_chr${chrom}.json"
   done
+  publish_dashboards
 fi
 
 python3 "$REPO/scripts/build_report_json.py" \
@@ -220,6 +249,127 @@ if [[ "${RUN_FLARE:-0}" == "1" ]]; then
   fi
 
   cp "$OUT/results/app/"*.json "$APP_DATA_DIR/"
+  publish_dashboards
+fi
+
+if [[ "${RUN_BROAD_FIRST_TARGET:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/make_flare_ref_panel.py" \
+    --labels "$OUT/metadata/hgdp_labels_broad.tsv" \
+    --out "$OUT/metadata/hgdp_flare_ref_panel_broad.tsv" \
+    --summary-json "$OUT/metadata/hgdp_flare_ref_panel_broad.json"
+
+  python3 "$REPO/scripts/prepare_flare_maps.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --outdir "$OUT/work/flare_maps" \
+    --prefix hg38 \
+    --chroms "$BROAD_FIRST_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  python3 "$REPO/scripts/run_flare.py" \
+    --dataset hgdp \
+    --shared-dir "$OUT/work/shared_snps" \
+    --eagle-dir "$OUT/results/eagle2" \
+    --phased-ref-dir "$OUT/results/phased_reference/hgdp" \
+    --map-dir "$OUT/work/flare_maps" \
+    --ref-panel "$OUT/metadata/hgdp_flare_ref_panel_broad.tsv" \
+    --outdir "$OUT/results/flare_broad_first" \
+    --chroms "$BROAD_FIRST_CHROMS" \
+    --threads "$FLARE_THREADS" \
+    --memory-gb "$FLARE_MEMORY_GB"
+
+  python3 "$REPO/scripts/parse_flare_outputs.py" \
+    --flare-dir "$OUT/results/flare_broad_first" \
+    --dataset hgdp \
+    --chroms "$BROAD_FIRST_CHROMS" \
+    --out-tsv "$SEGMENTS_DIR/raw_segments_hgdp_broad_first.tsv" \
+    --summary-json "$OUT/results/flare_broad_first/hgdp_segments_summary.json"
+
+  python3 "$REPO/scripts/smooth_ancestry_hmm.py" \
+    --input "$SEGMENTS_DIR/raw_segments_hgdp_broad_first.tsv" \
+    --out-tsv "$SEGMENTS_DIR/segments_hgdp_broad_first_raw_no_hmm.tsv" \
+    --out-json "$OUT/results/app/chromosome_segments_hgdp_broad_first_raw_no_hmm.json" \
+    --no-smooth \
+    --profile-name broad_first_raw_no_hmm
+
+  cp "$OUT/results/app/chromosome_segments_hgdp_broad_first_raw_no_hmm.json" "$APP_DATA_DIR/"
+  publish_dashboards
+fi
+
+if [[ "${RUN_RFMIX:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/make_flare_ref_panel.py" \
+    --labels "$OUT/metadata/hgdp_labels_general.tsv" \
+    --out "$OUT/metadata/hgdp_flare_ref_panel_general.tsv" \
+    --summary-json "$OUT/metadata/hgdp_flare_ref_panel_general.json"
+
+  python3 "$REPO/scripts/prepare_rfmix_map.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --out "$OUT/work/rfmix_maps/hg38.${RFMIX_CHROMS}.rfmix.map" \
+    --chroms "$RFMIX_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  python3 "$REPO/scripts/run_rfmix.py" \
+    --reference-vcf "$OUT/results/phased_reference/hgdp/hgdp.chr{chrom}.shared.reference.phased.vcf.gz" \
+    --target-template "$OUT/results/eagle2/hgdp/MY_SAMPLE.hgdp.chr{chrom}.eagle2.vcf.gz" \
+    --sample-map "$OUT/metadata/hgdp_flare_ref_panel_general.tsv" \
+    --genetic-map "$OUT/work/rfmix_maps/hg38.${RFMIX_CHROMS}.rfmix.map" \
+    --outdir "$OUT/results/rfmix/hgdp_general" \
+    --chroms "$RFMIX_CHROMS" \
+    --threads "$FLARE_THREADS"
+
+  publish_dashboards
+fi
+
+if [[ "${RUN_RFMIX_VALIDATE:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/prepare_rfmix_map.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --out "$OUT/work/rfmix_maps/hg38.${RFMIX_VALIDATE_CHROMS}.rfmix.map" \
+    --chroms "$RFMIX_VALIDATE_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  for chrom in ${RFMIX_VALIDATE_CHROMS//,/ }; do
+    chrom="${chrom#chr}"
+    python3 "$REPO/scripts/run_rfmix_holdout_validation.py" \
+      --phased-reference-vcf "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" \
+      --labels "$OUT/metadata/hgdp_labels_general.tsv" \
+      --map "$OUT/work/rfmix_maps/hg38.${RFMIX_VALIDATE_CHROMS}.rfmix.map" \
+      --outdir "$OUT/results/rfmix_validation/hgdp/chr${chrom}" \
+      --chrom "$chrom" \
+      --samples-per-label "$VALIDATION_SAMPLES_PER_LABEL" \
+      --threads "$FLARE_THREADS"
+  done
+fi
+
+if [[ "${RUN_RFMIX_GRID:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/prepare_rfmix_map.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --out "$OUT/work/rfmix_maps/hg38.${RFMIX_VALIDATE_CHROMS}.rfmix.map" \
+    --chroms "$RFMIX_VALIDATE_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  python3 "$REPO/scripts/run_rfmix_parameter_grid.py" \
+    --repo "$REPO" \
+    --out-root "$OUT" \
+    --chrom "$RFMIX_VALIDATE_CHROMS" \
+    --presets "${RFMIX_GRID_PRESETS:-default,shorter_windows,longer_windows,higher_transition_penalty,lower_transition_penalty}" \
+    --samples-per-label "$VALIDATION_SAMPLES_PER_LABEL" \
+    --threads "$FLARE_THREADS" \
+    ${RFMIX_GRID_FORCE:+--force}
+fi
+
+if [[ "${RUN_SIMULATIONS:-0}" == "1" ]]; then
+  for chrom in ${SIMULATION_CHROMS//,/ }; do
+    chrom="${chrom#chr}"
+    python3 "$REPO/scripts/simulate_admixed_holdouts.py" \
+      --phased-reference-vcf "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" \
+      --labels "$OUT/metadata/hgdp_labels_general.tsv" \
+      --pair Western_European+Middle_Eastern \
+      --pair Western_European+Southern_European \
+      --pair Middle_Eastern+Southern_European \
+      --samples-per-pair "${SIMULATION_SAMPLES_PER_PAIR:-2}" \
+      --out-vcf "$OUT/results/simulations/hgdp/chr${chrom}/synthetic_admixed_chr${chrom}.vcf.gz" \
+      --truth-tsv "$OUT/results/simulations/hgdp/chr${chrom}/synthetic_admixed_truth.tsv"
+    tabix -f -p vcf "$OUT/results/simulations/hgdp/chr${chrom}/synthetic_admixed_chr${chrom}.vcf.gz"
+  done
 fi
 
 if [[ "${RUN_VALIDATE:-0}" == "1" ]]; then
@@ -258,4 +408,5 @@ if [[ "${RUN_VALIDATE:-0}" == "1" ]]; then
 
     cp "$OUT/results/validation/hgdp/chr${chrom}/summary.json" "$APP_DATA_DIR/validation_hgdp_chr${chrom}.json"
   done
+  publish_dashboards
 fi

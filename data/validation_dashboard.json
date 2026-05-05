@@ -1,0 +1,527 @@
+{
+  "holdout": {
+    "accuracy": 0.7568,
+    "bridgeErrors": {
+      "nonSouthernEuropeanToSouthernEuropean": {
+        "Caucasus": 1,
+        "Western_European": 1
+      },
+      "pairs": {
+        "Caucasus->Southern_European": 1,
+        "Greater_Iranian->South_Asian": 0,
+        "Middle_Eastern->Southern_European": 0,
+        "South_Asian->Greater_Iranian": 2,
+        "Western_European->Southern_European": 1
+      },
+      "totalTrackedBridgeErrors": 4
+    },
+    "chrom": "22",
+    "errorCount": 9,
+    "errors": [
+      {
+        "predictedLabel": "Greater_Iranian",
+        "sample": "HGDP00169",
+        "topProbability": 0.956,
+        "trueLabel": "South_Asian"
+      },
+      {
+        "predictedLabel": "Greater_Iranian",
+        "sample": "HGDP00205",
+        "topProbability": 0.475,
+        "trueLabel": "South_Asian"
+      },
+      {
+        "predictedLabel": "Southern_European",
+        "sample": "HGDP00520",
+        "topProbability": 0.691,
+        "trueLabel": "Western_European"
+      },
+      {
+        "predictedLabel": "Caucasus",
+        "sample": "HGDP01156",
+        "topProbability": 0.436,
+        "trueLabel": "Southern_European"
+      },
+      {
+        "predictedLabel": "East_Asian",
+        "sample": "HGDP01230",
+        "topProbability": 0.622,
+        "trueLabel": "Northeast_Asian"
+      },
+      {
+        "predictedLabel": "East_Asian",
+        "sample": "HGDP01231",
+        "topProbability": 0.986,
+        "trueLabel": "Northeast_Asian"
+      },
+      {
+        "predictedLabel": "Southern_European",
+        "sample": "HGDP01388",
+        "topProbability": 0.652,
+        "trueLabel": "Caucasus"
+      },
+      {
+        "predictedLabel": "Southern_African",
+        "sample": "HGDP01408",
+        "topProbability": 0.774,
+        "trueLabel": "East_African"
+      },
+      {
+        "predictedLabel": "Southern_African",
+        "sample": "HGDP01417",
+        "topProbability": 0.675,
+        "trueLabel": "East_African"
+      }
+    ],
+    "perLabel": {
+      "Caucasus": {
+        "n": 2,
+        "recall": 0.5,
+        "topConfusions": [
+          [
+            "Caucasus",
+            1
+          ],
+          [
+            "Southern_European",
+            1
+          ]
+        ]
+      },
+      "Central_African": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Central_African",
+            2
+          ]
+        ]
+      },
+      "Central_Asian": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Central_Asian",
+            2
+          ]
+        ]
+      },
+      "East_African": {
+        "n": 2,
+        "recall": 0.0,
+        "topConfusions": [
+          [
+            "Southern_African",
+            2
+          ]
+        ]
+      },
+      "East_Asian": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "East_Asian",
+            2
+          ]
+        ]
+      },
+      "Eastern_European": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Eastern_European",
+            2
+          ]
+        ]
+      },
+      "Greater_Iranian": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Greater_Iranian",
+            2
+          ]
+        ]
+      },
+      "Indigenous_American": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Indigenous_American",
+            2
+          ]
+        ]
+      },
+      "Middle_Eastern": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Middle_Eastern",
+            2
+          ]
+        ]
+      },
+      "North_African": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "North_African",
+            2
+          ]
+        ]
+      },
+      "Northeast_Asian": {
+        "n": 2,
+        "recall": 0.0,
+        "topConfusions": [
+          [
+            "East_Asian",
+            2
+          ]
+        ]
+      },
+      "Oceanian": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Oceanian",
+            2
+          ]
+        ]
+      },
+      "Siberian": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Siberian",
+            2
+          ]
+        ]
+      },
+      "South_Asian": {
+        "n": 2,
+        "recall": 0.0,
+        "topConfusions": [
+          [
+            "Greater_Iranian",
+            2
+          ]
+        ]
+      },
+      "Southern_African": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Southern_African",
+            2
+          ]
+        ]
+      },
+      "Southern_African_Khoisan": {
+        "n": 1,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "Southern_African_Khoisan",
+            1
+          ]
+        ]
+      },
+      "Southern_European": {
+        "n": 2,
+        "recall": 0.5,
+        "topConfusions": [
+          [
+            "Southern_European",
+            1
+          ],
+          [
+            "Caucasus",
+            1
+          ]
+        ]
+      },
+      "West_African": {
+        "n": 2,
+        "recall": 1.0,
+        "topConfusions": [
+          [
+            "West_African",
+            2
+          ]
+        ]
+      },
+      "Western_European": {
+        "n": 2,
+        "recall": 0.5,
+        "topConfusions": [
+          [
+            "Western_European",
+            1
+          ],
+          [
+            "Southern_European",
+            1
+          ]
+        ]
+      }
+    },
+    "sampleCount": 37,
+    "southernEuropeanAttractorErrors": [
+      {
+        "predictedLabel": "Southern_European",
+        "sample": "HGDP00520",
+        "topProbability": 0.691,
+        "trueLabel": "Western_European"
+      },
+      {
+        "predictedLabel": "Southern_European",
+        "sample": "HGDP01388",
+        "topProbability": 0.652,
+        "trueLabel": "Caucasus"
+      }
+    ]
+  },
+  "independentModels": [
+    {
+      "accuracy": 0.7297,
+      "bridgeErrors": {
+        "nonSouthernEuropeanToSouthernEuropean": {
+          "Caucasus": 1
+        },
+        "pairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 0,
+          "Western_European->Southern_European": 0
+        },
+        "totalTrackedBridgeErrors": 1
+      },
+      "displayName": "RFMix HGDP general",
+      "id": "rfmix_general",
+      "sampleCount": 37,
+      "status": "validated_chr22"
+    }
+  ],
+  "parameterGrid": {
+    "chrom": "22",
+    "models": [
+      {
+        "accuracy": 0.7297,
+        "meanMixtureAbsError": 0.233543,
+        "meanUnexpectedSouthernEuropean": 0.014065,
+        "params": {
+          "program": "RFMix",
+          "threads": 4
+        },
+        "preset": "default",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 1
+      },
+      {
+        "accuracy": 0.6216,
+        "meanMixtureAbsError": 0.264445,
+        "meanUnexpectedSouthernEuropean": 0.04821,
+        "params": {
+          "crfSpacing": "0.05",
+          "crfWeight": null,
+          "emIterations": null,
+          "generations": null,
+          "nodeSize": null,
+          "program": "RFMix",
+          "reanalyzeReference": false,
+          "rfWindowSize": "0.1",
+          "threads": 4,
+          "trees": null
+        },
+        "preset": "shorter_windows",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 2
+      }
+    ],
+    "schemaVersion": 1
+  },
+  "schemaVersion": 1,
+  "syntheticValidation": {
+    "rfmixDefaultStrict": {
+      "meanMixtureAbsError": 0.233543,
+      "meanUnexpectedSouthernEuropean": 0.014065,
+      "sampleCount": 6,
+      "status": "source_parents_excluded"
+    }
+  },
+  "tournament": {
+    "chrom": "hgdp.chr22.shared.reference.phased.vcf.gz",
+    "metric": "accuracy minus 0.02 per tracked bridge error; balanced recall tie-break",
+    "models": [
+      {
+        "accuracy": 0.7727,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 0,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 0,
+          "Western_European->Southern_European": 0
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "10.0",
+          "minMaf": "0.005",
+          "program": "FLARE"
+        },
+        "modelName": "flare_broad_first",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_broad_first",
+        "sampleCount": 22,
+        "trackedBridgeErrors": 0
+      },
+      {
+        "accuracy": 0.7568,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "10.0",
+          "minMaf": "0.005",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_default",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_default",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      },
+      {
+        "accuracy": 0.7568,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "10.0",
+          "minMaf": "0.0",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_minmaf_0",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_minmaf_0",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      },
+      {
+        "accuracy": 0.7568,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "10.0",
+          "minMaf": "0.001",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_minmaf_001",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_minmaf_001",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      },
+      {
+        "accuracy": 0.7568,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "5.0",
+          "minMaf": "0.005",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_gen_5",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_gen_5",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      },
+      {
+        "accuracy": 0.7568,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": false,
+          "extraFlareArgs": [],
+          "gen": "10.0",
+          "minMaf": "0.005",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_no_em",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_no_em",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      },
+      {
+        "accuracy": 0.7297,
+        "bridgePairs": {
+          "Caucasus->Southern_European": 1,
+          "Greater_Iranian->South_Asian": 0,
+          "Middle_Eastern->Southern_European": 0,
+          "South_Asian->Greater_Iranian": 2,
+          "Western_European->Southern_European": 1
+        },
+        "modelConfig": {
+          "array": true,
+          "em": true,
+          "extraFlareArgs": [],
+          "gen": "20.0",
+          "minMaf": "0.005",
+          "program": "FLARE"
+        },
+        "modelName": "flare_flat_gen_20",
+        "resultDir": "/mnt/f/data/processed/genetics_eagle/results/model_tournament/hgdp/chr22/flare_flat_gen_20",
+        "sampleCount": 37,
+        "trackedBridgeErrors": 4
+      }
+    ],
+    "schemaVersion": 1,
+    "winner": "flare_broad_first"
+  }
+}

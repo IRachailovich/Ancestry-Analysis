@@ -10,8 +10,10 @@ Pipeline and lightweight report app for preparing 23andMe genotype data against 
 - 1000 Genomes population labeling
 - EAGLE2 v2.4.1 runner
 - FLARE local ancestry runner
+- RFMix local ancestry comparator
+- holdout validation, model-tournament, and synthetic-admixture calibration helpers
 - optional HMM smoothing for FLARE local ancestry segments
-- static report UI that reads generated JSON from `data/`
+- static report UI with Report, Sample models, Validation, and Quality tabs
 
 ## Main Workflow
 
@@ -57,6 +59,28 @@ cd /mnt/d/Python/Genetics
 SKIP_EXTRACTION=1 RUN_TOURNAMENT=1 TOURNAMENT_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
 ```
 
+Run the independent RFMix chr22 comparator:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_RFMIX=1 RFMIX_CHROMS=22 THREADS=4 FLARE_THREADS=4 bash run_pipeline_wsl.sh
+```
+
+Run RFMix validation and a small parameter check:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_RFMIX_VALIDATE=1 RFMIX_VALIDATE_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+SKIP_EXTRACTION=1 RUN_RFMIX_GRID=1 RFMIX_VALIDATE_CHROMS=22 RFMIX_GRID_PRESETS=default,shorter_windows bash run_pipeline_wsl.sh
+```
+
+Create synthetic admixed targets for validation/calibration only:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_SIMULATIONS=1 SIMULATION_CHROMS=22 bash run_pipeline_wsl.sh
+```
+
 ## Output Locations
 
 Main generated outputs are written outside the repo:
@@ -78,6 +102,8 @@ data/phasing_qc.json
 data/chromosome_segments_hgdp.json
 data/validation_hgdp_chr22.json
 data/model_tournament_hgdp_chr22.json
+data/validation_dashboard.json
+data/sample_model_outputs.json
 ```
 
 ## Documentation
