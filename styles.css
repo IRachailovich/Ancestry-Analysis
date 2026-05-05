@@ -10,6 +10,28 @@
   --coral: #d46d58;
   --amber: #c89028;
   --slate: #48545d;
+  --soft: #edf1ee;
+  --map-a: #dfe9e1;
+  --map-b: #f7f4eb;
+  --map-c: #eef3ef;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #edf4ef;
+  --muted: #a8b6b0;
+  --line: #33433e;
+  --paper: #101614;
+  --panel: #18211f;
+  --teal: #40c6b6;
+  --green: #9ac274;
+  --coral: #e07f6d;
+  --amber: #e5b958;
+  --slate: #c1cbc6;
+  --soft: #22302b;
+  --map-a: #26352f;
+  --map-b: #171f1c;
+  --map-c: #1d2824;
 }
 
 * {
@@ -33,6 +55,10 @@ body {
   position: sticky;
   top: 0;
   z-index: 2;
+}
+
+[data-theme="dark"] .topbar {
+  background: rgba(16, 22, 20, 0.94);
 }
 
 h1,
@@ -62,7 +88,8 @@ nav {
   gap: 6px;
 }
 
-nav a {
+nav a,
+.theme-toggle {
   border-radius: 999px;
   color: var(--slate);
   font-size: 14px;
@@ -70,9 +97,17 @@ nav a {
   text-decoration: none;
 }
 
-nav a:hover {
-  background: #eef2ef;
+nav a:hover,
+.theme-toggle:hover {
+  background: var(--soft);
   color: var(--ink);
+}
+
+.theme-toggle {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  cursor: pointer;
+  font: inherit;
 }
 
 main {
@@ -208,7 +243,7 @@ main {
 }
 
 .bar {
-  background: #edf1ee;
+  background: var(--soft);
   border-radius: 999px;
   height: 12px;
   overflow: hidden;
@@ -221,7 +256,7 @@ main {
 }
 
 .pill {
-  background: #f2f3ef;
+  background: var(--soft);
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--slate);
@@ -359,7 +394,7 @@ main {
 }
 
 .copy-track {
-  background: #edf1ee;
+  background: var(--soft);
   border-radius: 99px;
   height: 10px;
   overflow: hidden;
@@ -390,12 +425,12 @@ main {
 }
 
 .copy-status.success {
-  background: #eef7f3;
+  background: color-mix(in srgb, var(--teal) 12%, var(--panel));
   color: var(--teal);
 }
 
 .copy-status.review {
-  background: #fff6e8;
+  background: color-mix(in srgb, var(--amber) 16%, var(--panel));
   color: var(--amber);
 }
 
@@ -418,10 +453,10 @@ main {
 
 .map-shell {
   background:
-    radial-gradient(circle at 20% 50%, #dfe9e1 0 8%, transparent 9%),
-    radial-gradient(circle at 48% 44%, #dfe9e1 0 12%, transparent 13%),
-    radial-gradient(circle at 72% 56%, #dfe9e1 0 11%, transparent 12%),
-    linear-gradient(135deg, #f7f4eb, #eef3ef);
+    radial-gradient(circle at 20% 50%, var(--map-a) 0 8%, transparent 9%),
+    radial-gradient(circle at 48% 44%, var(--map-a) 0 12%, transparent 13%),
+    radial-gradient(circle at 72% 56%, var(--map-a) 0 11%, transparent 12%),
+    linear-gradient(135deg, var(--map-b), var(--map-c));
   border: 1px solid var(--line);
   border-radius: 8px;
   height: 270px;
@@ -491,19 +526,6 @@ main {
   display: block;
   font-size: 26px;
   margin-top: 10px;
-}
-
-.concept {
-  align-items: start;
-  display: grid;
-  gap: 18px;
-}
-
-.concept img {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  display: block;
-  max-width: 100%;
 }
 
 @media (max-width: 860px) {

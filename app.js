@@ -45,6 +45,27 @@ const fallbackPhasing = {
   datasets: {},
 };
 
+function applyTheme(theme) {
+  const resolved = theme === "dark" ? "dark" : "light";
+  document.documentElement.dataset.theme = resolved;
+  const button = document.querySelector("#themeToggle");
+  if (button) {
+    button.textContent = resolved === "dark" ? "Light" : "Dark";
+    button.setAttribute("aria-label", `Switch to ${resolved === "dark" ? "light" : "dark"} theme`);
+  }
+}
+
+function initTheme() {
+  const stored = localStorage.getItem("ancestry-theme");
+  const prefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  applyTheme(stored || (prefersDark ? "dark" : "light"));
+  document.querySelector("#themeToggle")?.addEventListener("click", () => {
+    const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+    localStorage.setItem("ancestry-theme", next);
+    applyTheme(next);
+  });
+}
+
 function formatNumber(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
     return "Pending";
@@ -206,6 +227,7 @@ function renderQuality(report, quality) {
 }
 
 async function main() {
+  initTheme();
   const [reportResult, qualityResult, phasingResult] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),

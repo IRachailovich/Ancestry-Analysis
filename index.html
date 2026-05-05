@@ -17,6 +17,7 @@
         <a href="#chromosomes">Chromosomes</a>
         <a href="#map">Explore</a>
         <a href="#quality">Quality</a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">Dark</button>
       </nav>
     </header>
 
@@ -24,10 +25,10 @@
       <section class="summary" id="report">
         <div class="summary-copy">
           <p class="eyebrow">Option 5 direction</p>
-          <h2>Readable ancestry results, with the analysis details still close at hand.</h2>
+          <h2>Personal ancestry report, with the analysis details still close at hand.</h2>
           <p>
-            This deployable UI shell consumes the JSON contract produced by the pipeline:
-            report summary, SNP quality, reference labels, and EAGLE2 result status.
+            This report uses Option 5 as the main experience: clear ancestry results,
+            phased chromosomes, reference-set quality, and room for probabilistic ancestry calls.
           </p>
         </div>
         <div class="status-panel" aria-live="polite">
@@ -123,13 +124,6 @@
         <div class="quality-grid" id="qualityGrid"></div>
       </section>
 
-      <section class="concept">
-        <div>
-          <p class="eyebrow">Design reference</p>
-          <h3>Selected model UI options</h3>
-        </div>
-        <img src="/assets/ui-concepts/ancestry-ui-options.png" alt="Five UI concept options for the ancestry analysis app">
-      </section>
     </main>
 
     <script src="/app.js" type="module"></script>
