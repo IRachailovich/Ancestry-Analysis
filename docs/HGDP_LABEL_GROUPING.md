@@ -236,6 +236,121 @@ Important caveat: these are analysis labels, not claims about identity. They are
 | Yi | EAST_ASIA | 10 | East_Asian | East_Asian | Yi |
 | Yoruba | AFRICA | 22 | West_African | African | Yoruba |
 
+## 1000 Genomes Label Grouping Audit
+
+This section documents the current 1000 Genomes labels used by the pipeline. It is generated from `/mnt/f/data/processed/genetics_eagle/metadata/1000genomes_labels.tsv`, which is created from the 1000 Genomes sample panel and the grouping rules in `scripts/make_labels.py`.
+
+Important caveat: 1000 Genomes has much better modern European anchors than HGDP for this project, but it still does not contain explicit German, Dutch, or Danish populations.
+
+### 1000 Genomes Coverage Gaps and Strengths
+
+- Stronger than HGDP for the European half because it includes `CEU`, `GBR`, and `FIN`.
+- `CEU` is currently labeled `Utah_NW_European`; this is the closest local proxy for North/West European ancestry.
+- `GBR` is currently labeled `British`; useful as a Northwest-European proxy.
+- `FIN` is currently labeled `Finnish`; useful for North/Northeast European structure, but not Germanic mainland.
+- `TSI` is currently labeled `Italian_Tuscany`; useful as a Southern-European control.
+- `IBS` is currently labeled `Iberian_Spain`; useful as a Southwest-European control.
+- Still missing: explicit German, Dutch, Danish, Austrian, Swedish, Norwegian labels.
+- Also weak for Middle Eastern / Arabian ancestry: 1000 Genomes does not include Bedouin, Palestinian, Druze, Yemeni, or similar Arabian/Levantine populations.
+
+### 1000 Genomes Superpopulation Counts
+
+| Original superpopulation code | Pipeline general label | Samples |
+|---|---|---:|
+| AFR | African | 661 |
+| AMR | Admixed_American | 347 |
+| EAS | East_Asian | 504 |
+| EUR | European | 503 |
+| SAS | South_Asian | 489 |
+
+### 1000 Genomes General Label Groups
+
+#### Admixed_American (n=347)
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Samples |
+|---|---|---|---:|
+| CLM | Colombian_Medellin | AMR | 94 |
+| MXL | Mexican_Ancestry_LA | AMR | 64 |
+| PEL | Peruvian_Lima | AMR | 85 |
+| PUR | Puerto_Rican | AMR | 104 |
+
+#### African (n=661)
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Samples |
+|---|---|---|---:|
+| ACB | African_Caribbean_Barbados | AFR | 96 |
+| ASW | African_Ancestry_SW_US | AFR | 61 |
+| ESN | Esan_Nigeria | AFR | 99 |
+| GWD | Gambian_Western_Division | AFR | 113 |
+| LWK | Luhya_Kenya | AFR | 99 |
+| MSL | Mende_Sierra_Leone | AFR | 85 |
+| YRI | Yoruba_Ibadan | AFR | 108 |
+
+#### East_Asian (n=504)
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Samples |
+|---|---|---|---:|
+| CDX | Chinese_Dai | EAS | 93 |
+| CHB | Han_Chinese_Beijing | EAS | 103 |
+| CHS | Han_Chinese_South | EAS | 105 |
+| JPT | Japanese_Tokyo | EAS | 104 |
+| KHV | Kinh_Vietnam | EAS | 99 |
+
+#### European (n=503)
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Samples |
+|---|---|---|---:|
+| CEU | Utah_NW_European | EUR | 99 |
+| FIN | Finnish | EUR | 99 |
+| GBR | British | EUR | 91 |
+| IBS | Iberian_Spain | EUR | 107 |
+| TSI | Italian_Tuscany | EUR | 107 |
+
+#### South_Asian (n=489)
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Samples |
+|---|---|---|---:|
+| BEB | Bengali_Bangladesh | SAS | 86 |
+| GIH | Gujarati_Indian_Houston | SAS | 103 |
+| ITU | Indian_Telugu_UK | SAS | 102 |
+| PJL | Punjabi_Lahore | SAS | 96 |
+| STU | Sri_Lankan_Tamil_UK | SAS | 102 |
+
+### Full 1000 Genomes Population Mapping
+
+| Population code | Population label used by pipeline | 1000G superpopulation | Pipeline general label | Samples |
+|---|---|---|---|---:|
+| ACB | African_Caribbean_Barbados | AFR | African | 96 |
+| ASW | African_Ancestry_SW_US | AFR | African | 61 |
+| BEB | Bengali_Bangladesh | SAS | South_Asian | 86 |
+| CDX | Chinese_Dai | EAS | East_Asian | 93 |
+| CEU | Utah_NW_European | EUR | European | 99 |
+| CHB | Han_Chinese_Beijing | EAS | East_Asian | 103 |
+| CHS | Han_Chinese_South | EAS | East_Asian | 105 |
+| CLM | Colombian_Medellin | AMR | Admixed_American | 94 |
+| ESN | Esan_Nigeria | AFR | African | 99 |
+| FIN | Finnish | EUR | European | 99 |
+| GBR | British | EUR | European | 91 |
+| GIH | Gujarati_Indian_Houston | SAS | South_Asian | 103 |
+| GWD | Gambian_Western_Division | AFR | African | 113 |
+| IBS | Iberian_Spain | EUR | European | 107 |
+| ITU | Indian_Telugu_UK | SAS | South_Asian | 102 |
+| JPT | Japanese_Tokyo | EAS | East_Asian | 104 |
+| KHV | Kinh_Vietnam | EAS | East_Asian | 99 |
+| LWK | Luhya_Kenya | AFR | African | 99 |
+| MSL | Mende_Sierra_Leone | AFR | African | 85 |
+| MXL | Mexican_Ancestry_LA | AMR | Admixed_American | 64 |
+| PEL | Peruvian_Lima | AMR | Admixed_American | 85 |
+| PJL | Punjabi_Lahore | SAS | South_Asian | 96 |
+| PUR | Puerto_Rican | AMR | Admixed_American | 104 |
+| STU | Sri_Lankan_Tamil_UK | SAS | South_Asian | 102 |
+| TSI | Italian_Tuscany | EUR | European | 107 |
+| YRI | Yoruba_Ibadan | AFR | African | 108 |
+
+### Immediate Modeling Implication for 1000 Genomes
+
+For the phasing-sensitivity test, 1000 Genomes is a better ancestry reference than HGDP for the European half because it provides `CEU`, `GBR`, and `FIN`. However, 1000 Genomes alone cannot model the Middle Eastern/Yemeni half well, because it lacks Arabian/Levantine reference populations. Therefore, 1000G is useful for testing whether the inflated `Southern_European` signal is caused by missing Northwest-European anchors, but it is not a complete final ancestry panel.
+
 ## Immediate Modeling Implication
 
 The inflated `Southern_European` result should not be interpreted literally until we validate a reference panel that contains the missing target populations or redesign the West-Eurasian label hierarchy. In the current HGDP-only setup, `Southern_European` may be acting as a proxy/attractor inside the West-Eurasian space rather than as a reliable Italian-specific assignment.
