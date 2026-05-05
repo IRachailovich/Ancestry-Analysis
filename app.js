@@ -108,23 +108,35 @@ function datasetLabel(dataset) {
 function chromosomeRow(chrom, stats) {
   const hets = Number(stats?.heterozygousVariants ?? 0);
   const phased = Number(stats?.phasedHeterozygousVariants ?? 0);
+  const unphased = Number(stats?.unphasedHeterozygousVariants ?? 0);
   const rate = Number(stats?.phasedHetRatePct ?? 0);
   const hap1 = Number(stats?.hap1AltAlleles ?? 0);
   const hap2 = Number(stats?.hap2AltAlleles ?? 0);
   const hapTotal = Math.max(hap1 + hap2, 1);
   const hap1Pct = (hap1 / hapTotal) * 100;
   const hap2Pct = (hap2 / hapTotal) * 100;
+  const success = hets > 0 && phased === hets && unphased === 0;
+  const status = success ? "success" : "review";
+  const statusText = success ? "phased" : "review";
 
   return `
     <div class="chromosome">
       <span>${chrom}</span>
       <div class="chromosome-body">
-        <div class="chromosome-track" aria-label="Chromosome ${chrom} phased haplotype balance">
-          <i class="hap-one" style="flex-basis: ${hap1Pct}%"></i>
-          <i class="hap-two" style="flex-basis: ${hap2Pct}%"></i>
+        <div class="copy-pair" aria-label="Chromosome ${chrom} copy phasing status">
+          <div class="copy-row">
+            <span class="copy-label">copy 1</span>
+            <div class="copy-track"><i class="hap-one" style="width: ${Math.max(4, hap1Pct)}%"></i></div>
+            <span class="copy-status ${status}">${statusText}</span>
+          </div>
+          <div class="copy-row">
+            <span class="copy-label">copy 2</span>
+            <div class="copy-track"><i class="hap-two" style="width: ${Math.max(4, hap2Pct)}%"></i></div>
+            <span class="copy-status ${status}">${statusText}</span>
+          </div>
         </div>
         <div class="chromosome-meta">
-          <span>${formatNumber(phased)} / ${formatNumber(hets)} hets phased</span>
+          <span>${formatNumber(phased)} / ${formatNumber(hets)} heterozygous sites split into two haplotypes</span>
           <strong>${formatPercent(rate)}</strong>
         </div>
       </div>
