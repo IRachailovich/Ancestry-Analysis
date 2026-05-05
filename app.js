@@ -49,6 +49,11 @@ const fallbackSegments = {
   chromosomes: {},
 };
 
+const fallbackValidation = {
+  accuracy: null,
+  sampleCount: 0,
+};
+
 function applyTheme(theme) {
   const resolved = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = resolved;
@@ -246,13 +251,14 @@ function renderLocalAncestry(segments) {
     });
 
   const chromCount = Object.keys(segments.chromosomes || {}).length;
+  const profile = segments.smoothingProfile?.replaceAll("_", " ") || "raw/no HMM";
   list.innerHTML = `
-    <div class="ancestry-note">${formatNumber(chromCount)} chromosome${chromCount === 1 ? "" : "s"} with FLARE segments</div>
+    <div class="ancestry-note">${formatNumber(chromCount)} chromosome${chromCount === 1 ? "" : "s"} with FLARE segments · ${profile}</div>
     ${rows.join("")}
   `;
 }
 
-function renderQuality(report, quality) {
+function renderQuality(report, quality, validation) {
   const grid = document.querySelector("#qualityGrid");
   grid.innerHTML = "";
 
@@ -274,21 +280,31 @@ function renderQuality(report, quality) {
     <span>Detected from extraction log</span>
   `;
   grid.append(extraction);
+
+  const validator = document.createElement("article");
+  validator.innerHTML = `
+    <span>HGDP holdout validation</span>
+    <strong>${validation.accuracy === null || validation.accuracy === undefined ? "Pending" : formatPercent(Number(validation.accuracy) * 100)}</strong>
+    <span>${formatNumber(validation.sampleCount || 0)} known samples, chr22</span>
+  `;
+  grid.append(validator);
 }
 
 async function main() {
   initTheme();
-  const [reportResult, qualityResult, phasingResult, segmentsResult] = await Promise.all([
+  const [reportResult, qualityResult, phasingResult, segmentsResult, validationResult] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),
     loadJson("/data/phasing_qc.json", fallbackPhasing),
     loadJson("/data/chromosome_segments_hgdp.json", fallbackSegments),
+    loadJson("/data/validation_hgdp_chr22.json", fallbackValidation),
   ]);
 
   const report = reportResult.data;
   const quality = qualityResult.data;
   const phasing = phasingResult.data;
   const segments = segmentsResult.data;
+  const validation = validationResult.data;
   const live = reportResult.source === "pipeline";
   document.querySelector("#dataStatus").textContent = live
     ? "Using exported pipeline JSON"
@@ -298,7 +314,7 @@ async function main() {
   renderDatasets(report);
   renderChromosomes(phasing);
   renderLocalAncestry(segments);
-  renderQuality(report, quality);
+  renderQuality(report, quality, validation);
 }
 
 main().catch((error) => {

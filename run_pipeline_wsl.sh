@@ -14,6 +14,8 @@ FLARE_DATASETS="${FLARE_DATASETS:-hgdp}"
 FLARE_THREADS="${FLARE_THREADS:-$THREADS}"
 FLARE_MEMORY_GB="${FLARE_MEMORY_GB:-6}"
 PHASE_HGDP_REF="${PHASE_HGDP_REF:-1}"
+VALIDATE_CHROMS="${VALIDATE_CHROMS:-22}"
+VALIDATION_SAMPLES_PER_LABEL="${VALIDATION_SAMPLES_PER_LABEL:-2}"
 
 mkdir -p "$OUT"/{metadata,work,logs,results}
 mkdir -p "$APP_DATA_DIR"
@@ -144,8 +146,33 @@ if [[ "${RUN_FLARE:-0}" == "1" ]]; then
 
     python3 "$REPO/scripts/smooth_ancestry_hmm.py" \
       --input "$SEGMENTS_DIR/raw_segments_${dataset}.tsv" \
+      --out-tsv "$SEGMENTS_DIR/segments_${dataset}_raw_no_hmm.tsv" \
+      --out-json "$OUT/results/app/chromosome_segments_${dataset}_raw_no_hmm.json" \
+      --no-smooth \
+      --profile-name raw_no_hmm
+
+    python3 "$REPO/scripts/smooth_ancestry_hmm.py" \
+      --input "$SEGMENTS_DIR/raw_segments_${dataset}.tsv" \
+      --out-tsv "$SEGMENTS_DIR/smoothed_segments_${dataset}_light.tsv" \
+      --out-json "$OUT/results/app/chromosome_segments_${dataset}_light.json" \
+      --stay-prob 0.9 \
+      --profile-name hmm_light_0.90
+
+    python3 "$REPO/scripts/smooth_ancestry_hmm.py" \
+      --input "$SEGMENTS_DIR/raw_segments_${dataset}.tsv" \
+      --out-tsv "$SEGMENTS_DIR/smoothed_segments_${dataset}_medium.tsv" \
+      --out-json "$OUT/results/app/chromosome_segments_${dataset}_medium.json" \
+      --stay-prob 0.97 \
+      --profile-name hmm_medium_0.97
+
+    python3 "$REPO/scripts/smooth_ancestry_hmm.py" \
+      --input "$SEGMENTS_DIR/raw_segments_${dataset}.tsv" \
       --out-tsv "$SEGMENTS_DIR/smoothed_segments_${dataset}.tsv" \
-      --out-json "$OUT/results/app/chromosome_segments_${dataset}.json"
+      --out-json "$OUT/results/app/chromosome_segments_${dataset}_strong.json" \
+      --stay-prob 0.995 \
+      --profile-name hmm_strong_0.995
+
+    cp "$OUT/results/app/chromosome_segments_${dataset}_raw_no_hmm.json" "$OUT/results/app/chromosome_segments_${dataset}.json"
   done
 
   if [[ -s "$OUT/results/app/chromosome_segments_hgdp.json" ]]; then
@@ -153,4 +180,42 @@ if [[ "${RUN_FLARE:-0}" == "1" ]]; then
   fi
 
   cp "$OUT/results/app/"*.json "$APP_DATA_DIR/"
+fi
+
+if [[ "${RUN_VALIDATE:-0}" == "1" ]]; then
+  python3 "$REPO/scripts/prepare_flare_maps.py" \
+    --input "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+    --outdir "$OUT/work/flare_maps" \
+    --prefix hg38 \
+    --chroms "$VALIDATE_CHROMS" \
+    --vcf-chrom-prefix chr
+
+  if [[ "$VALIDATE_CHROMS" == "all" ]]; then
+    validate_chroms="$(seq 1 22)"
+  else
+    validate_chroms="${VALIDATE_CHROMS//,/ }"
+  fi
+
+  for chrom in $validate_chroms; do
+    chrom="${chrom#chr}"
+    if [[ ! -s "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" ]]; then
+      python3 "$REPO/scripts/phase_hgdp_reference.py" \
+        --shared-dir "$OUT/work/shared_snps" \
+        --outdir "$OUT/results/phased_reference/hgdp" \
+        --genetic-map-file "${HGDP_EAGLE_MAP:-/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz}" \
+        --threads "$THREADS" \
+        --chroms "$chrom"
+    fi
+
+    python3 "$REPO/scripts/run_flare_holdout_validation.py" \
+      --phased-reference-vcf "$OUT/results/phased_reference/hgdp/hgdp.chr${chrom}.shared.reference.phased.vcf.gz" \
+      --labels "$OUT/metadata/hgdp_labels_general.tsv" \
+      --map "$OUT/work/flare_maps/hg38.chr${chrom}.flare.map" \
+      --outdir "$OUT/results/validation/hgdp/chr${chrom}" \
+      --samples-per-label "$VALIDATION_SAMPLES_PER_LABEL" \
+      --threads "$FLARE_THREADS" \
+      --memory-gb "$FLARE_MEMORY_GB"
+
+    cp "$OUT/results/validation/hgdp/chr${chrom}/summary.json" "$APP_DATA_DIR/validation_hgdp_chr${chrom}.json"
+  done
 fi

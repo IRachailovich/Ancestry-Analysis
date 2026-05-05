@@ -43,6 +43,13 @@ cd /mnt/d/Python/Genetics
 SKIP_EXTRACTION=1 RUN_FLARE=1 FLARE_CHROMS=all THREADS=8 FLARE_THREADS=4 FLARE_MEMORY_GB=6 bash run_pipeline_wsl.sh
 ```
 
+Run an unbiased HGDP holdout validation before trusting the model:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_VALIDATE=1 VALIDATE_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+```
+
 ## Output Locations
 
 Main generated outputs are written outside the repo:
@@ -62,6 +69,7 @@ The chromosome view uses:
 ```bash
 data/phasing_qc.json
 data/chromosome_segments_hgdp.json
+data/validation_hgdp_chr22.json
 ```
 
 ## Documentation

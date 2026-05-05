@@ -121,7 +121,7 @@ def write_tsv(path: Path, rows: list[dict[str, str]]) -> None:
         writer.writerows(rows)
 
 
-def write_json(path: Path, rows: list[dict[str, str]]) -> None:
+def write_json(path: Path, rows: list[dict[str, str]], profile: str) -> None:
     by_chrom: dict[str, list[dict[str, object]]] = defaultdict(list)
     for row in rows:
         by_chrom[row["chrom"]].append({
@@ -134,7 +134,7 @@ def write_json(path: Path, rows: list[dict[str, str]]) -> None:
             "source": row.get("source", ""),
         })
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({"schemaVersion": 1, "chromosomes": by_chrom}, indent=2, sort_keys=True) + "\n")
+    path.write_text(json.dumps({"schemaVersion": 1, "smoothingProfile": profile, "chromosomes": by_chrom}, indent=2, sort_keys=True) + "\n")
 
 
 def main() -> None:
@@ -144,6 +144,8 @@ def main() -> None:
     parser.add_argument("--out-json", required=True, type=Path)
     parser.add_argument("--stay-prob", type=float, default=0.995)
     parser.add_argument("--min-prob", type=float, default=1e-6)
+    parser.add_argument("--no-smooth", action="store_true", help="Only merge adjacent identical raw calls; do not run HMM.")
+    parser.add_argument("--profile-name", help="Label to store in the output JSON.")
     args = parser.parse_args()
 
     rows = read_rows(args.input)
@@ -159,11 +161,12 @@ def main() -> None:
 
     for group in sorted(by_group, key=sort_key):
         group_rows = sorted(by_group[group], key=lambda row: (int(row["start"]), int(row["end"])))
-        labels = viterbi(group_rows, states, args.stay_prob, args.min_prob)
+        labels = [row["label"] for row in group_rows] if args.no_smooth else viterbi(group_rows, states, args.stay_prob, args.min_prob)
         smoothed.extend(merge_segments(group_rows, labels))
 
+    profile = args.profile_name or ("raw_no_hmm" if args.no_smooth else f"hmm_stay_{args.stay_prob}")
     write_tsv(args.out_tsv, smoothed)
-    write_json(args.out_json, smoothed)
+    write_json(args.out_json, smoothed, profile)
     print(f"Wrote smoothed segments: {args.out_tsv}", flush=True)
     print(f"Wrote chromosome JSON: {args.out_json}", flush=True)
 

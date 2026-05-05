@@ -1,0 +1,235 @@
+{
+  "accuracy": 0.7568,
+  "labelColumn": "label",
+  "labelCounts": {
+    "Caucasus": 16,
+    "Central_African": 35,
+    "Central_Asian": 29,
+    "East_African": 11,
+    "East_Asian": 189,
+    "Eastern_European": 25,
+    "Greater_Iranian": 98,
+    "Indigenous_American": 61,
+    "Middle_Eastern": 134,
+    "North_African": 27,
+    "Northeast_Asian": 9,
+    "Oceanian": 28,
+    "Siberian": 25,
+    "South_Asian": 70,
+    "Southern_African": 8,
+    "Southern_African_Khoisan": 6,
+    "Southern_European": 48,
+    "West_African": 44,
+    "Western_European": 66
+  },
+  "minRefSamples": 5,
+  "perLabel": {
+    "Caucasus": {
+      "n": 2,
+      "recall": 0.5,
+      "topConfusions": [
+        [
+          "Caucasus",
+          1
+        ],
+        [
+          "Southern_European",
+          1
+        ]
+      ]
+    },
+    "Central_African": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Central_African",
+          2
+        ]
+      ]
+    },
+    "Central_Asian": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Central_Asian",
+          2
+        ]
+      ]
+    },
+    "East_African": {
+      "n": 2,
+      "recall": 0.0,
+      "topConfusions": [
+        [
+          "Southern_African",
+          2
+        ]
+      ]
+    },
+    "East_Asian": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "East_Asian",
+          2
+        ]
+      ]
+    },
+    "Eastern_European": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Eastern_European",
+          2
+        ]
+      ]
+    },
+    "Greater_Iranian": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Greater_Iranian",
+          2
+        ]
+      ]
+    },
+    "Indigenous_American": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Indigenous_American",
+          2
+        ]
+      ]
+    },
+    "Middle_Eastern": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Middle_Eastern",
+          2
+        ]
+      ]
+    },
+    "North_African": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "North_African",
+          2
+        ]
+      ]
+    },
+    "Northeast_Asian": {
+      "n": 2,
+      "recall": 0.0,
+      "topConfusions": [
+        [
+          "East_Asian",
+          2
+        ]
+      ]
+    },
+    "Oceanian": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Oceanian",
+          2
+        ]
+      ]
+    },
+    "Siberian": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Siberian",
+          2
+        ]
+      ]
+    },
+    "South_Asian": {
+      "n": 2,
+      "recall": 0.0,
+      "topConfusions": [
+        [
+          "Greater_Iranian",
+          2
+        ]
+      ]
+    },
+    "Southern_African": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Southern_African",
+          2
+        ]
+      ]
+    },
+    "Southern_African_Khoisan": {
+      "n": 1,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "Southern_African_Khoisan",
+          1
+        ]
+      ]
+    },
+    "Southern_European": {
+      "n": 2,
+      "recall": 0.5,
+      "topConfusions": [
+        [
+          "Southern_European",
+          1
+        ],
+        [
+          "Caucasus",
+          1
+        ]
+      ]
+    },
+    "West_African": {
+      "n": 2,
+      "recall": 1.0,
+      "topConfusions": [
+        [
+          "West_African",
+          2
+        ]
+      ]
+    },
+    "Western_European": {
+      "n": 2,
+      "recall": 0.5,
+      "topConfusions": [
+        [
+          "Western_European",
+          1
+        ],
+        [
+          "Southern_European",
+          1
+        ]
+      ]
+    }
+  },
+  "phasedReferenceVcf": "/mnt/f/data/processed/genetics_eagle/results/phased_reference/hgdp/hgdp.chr22.shared.reference.phased.vcf.gz",
+  "sampleCount": 37,
+  "samplesPerLabel": 2,
+  "schemaVersion": 1,
+  "seed": 20260505
+}

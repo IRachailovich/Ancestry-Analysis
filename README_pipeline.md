@@ -86,6 +86,30 @@ FLARE inputs and outputs:
 - Smoothed segments: `/mnt/f/data/processed/genetics_eagle/results/segments/smoothed_segments_hgdp.tsv`
 - App JSON: `/mnt/d/Python/Genetics/data/chromosome_segments_hgdp.json`
 
+The pipeline writes several segment profiles so the HMM cannot hide bridge mistakes:
+
+- Raw/no-HMM: `/mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments_hgdp_raw_no_hmm.json`
+- Light HMM: `/mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments_hgdp_light.json`
+- Medium HMM: `/mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments_hgdp_medium.json`
+- Strong HMM: `/mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments_hgdp_strong.json`
+- App default: raw/no-HMM until validation says smoothing is trustworthy.
+
+## Holdout Validation
+
+Before interpreting the target sample, run known-reference holdout validation. The validator removes known HGDP samples from the reference panel, classifies them as unknown targets, and writes predictions plus a confusion matrix.
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_VALIDATE=1 VALIDATE_CHROMS=22 VALIDATION_SAMPLES_PER_LABEL=2 bash run_pipeline_wsl.sh
+```
+
+Outputs:
+
+- `/mnt/f/data/processed/genetics_eagle/results/validation/hgdp/chr22/predictions.tsv`
+- `/mnt/f/data/processed/genetics_eagle/results/validation/hgdp/chr22/confusion_matrix.tsv`
+- `/mnt/f/data/processed/genetics_eagle/results/validation/hgdp/chr22/summary.json`
+- `/mnt/d/Python/Genetics/data/validation_hgdp_chr22.json`
+
 ## HMM Smoothing
 
 The smoothing stage runs after FLARE. It keeps haplotype copy 1 and copy 2 separate when the input has a `copy` column.
