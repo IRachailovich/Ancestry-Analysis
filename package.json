@@ -6,6 +6,7 @@
     "start": "python -m http.server 4173",
     "pipeline": "bash run_pipeline_wsl.sh",
     "pipeline:eagle": "RUN_EAGLE=1 bash run_pipeline_wsl.sh",
+    "pipeline:flare": "SKIP_EXTRACTION=1 RUN_FLARE=1 bash run_pipeline_wsl.sh",
     "deploy": "vercel deploy",
     "deploy:prod": "vercel deploy --prod"
   }

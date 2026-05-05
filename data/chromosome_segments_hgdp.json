@@ -1,0 +1,358 @@
+{
+  "chromosomes": {
+    "22": [
+      {
+        "confidence": 0.7512,
+        "copy": "1",
+        "end": 30557308,
+        "label": "Southern_European",
+        "snpCount": 2608,
+        "source": "flare_hgdp",
+        "start": 16391821
+      },
+      {
+        "confidence": 0.4792,
+        "copy": "1",
+        "end": 30597849,
+        "label": "Southern_European",
+        "snpCount": 12,
+        "source": "flare_hgdp",
+        "start": 30559920
+      },
+      {
+        "confidence": 0.7092,
+        "copy": "1",
+        "end": 33041593,
+        "label": "Southern_European",
+        "snpCount": 457,
+        "source": "flare_hgdp",
+        "start": 30607574
+      },
+      {
+        "confidence": 0.4421,
+        "copy": "1",
+        "end": 33254059,
+        "label": "Southern_European",
+        "snpCount": 52,
+        "source": "flare_hgdp",
+        "start": 33045891
+      },
+      {
+        "confidence": 0.7139,
+        "copy": "1",
+        "end": 36237815,
+        "label": "Southern_European",
+        "snpCount": 564,
+        "source": "flare_hgdp",
+        "start": 33260170
+      },
+      {
+        "confidence": 0.6965,
+        "copy": "1",
+        "end": 36666969,
+        "label": "Southern_European",
+        "snpCount": 101,
+        "source": "flare_hgdp",
+        "start": 36238986
+      },
+      {
+        "confidence": 0.3956,
+        "copy": "1",
+        "end": 36964375,
+        "label": "Southern_European",
+        "snpCount": 94,
+        "source": "flare_hgdp",
+        "start": 36682131
+      },
+      {
+        "confidence": 0.5168,
+        "copy": "1",
+        "end": 37282524,
+        "label": "Southern_European",
+        "snpCount": 96,
+        "source": "flare_hgdp",
+        "start": 36969311
+      },
+      {
+        "confidence": 0.5484,
+        "copy": "1",
+        "end": 38458156,
+        "label": "Southern_European",
+        "snpCount": 221,
+        "source": "flare_hgdp",
+        "start": 37290861
+      },
+      {
+        "confidence": 0.4177,
+        "copy": "1",
+        "end": 38742327,
+        "label": "Southern_European",
+        "snpCount": 35,
+        "source": "flare_hgdp",
+        "start": 38468830
+      },
+      {
+        "confidence": 0.6934,
+        "copy": "1",
+        "end": 42188912,
+        "label": "Southern_European",
+        "snpCount": 417,
+        "source": "flare_hgdp",
+        "start": 38754988
+      },
+      {
+        "confidence": 0.5018,
+        "copy": "1",
+        "end": 42475109,
+        "label": "Southern_European",
+        "snpCount": 45,
+        "source": "flare_hgdp",
+        "start": 42207808
+      },
+      {
+        "confidence": 0.5546,
+        "copy": "1",
+        "end": 43244722,
+        "label": "Southern_European",
+        "snpCount": 147,
+        "source": "flare_hgdp",
+        "start": 42479367
+      },
+      {
+        "confidence": 0.4577,
+        "copy": "1",
+        "end": 43268659,
+        "label": "Southern_European",
+        "snpCount": 13,
+        "source": "flare_hgdp",
+        "start": 43249127
+      },
+      {
+        "confidence": 0.666,
+        "copy": "1",
+        "end": 44180252,
+        "label": "Southern_European",
+        "snpCount": 206,
+        "source": "flare_hgdp",
+        "start": 43271417
+      },
+      {
+        "confidence": 0.5916,
+        "copy": "1",
+        "end": 44401843,
+        "label": "Southern_European",
+        "snpCount": 102,
+        "source": "flare_hgdp",
+        "start": 44183856
+      },
+      {
+        "confidence": 0.739,
+        "copy": "1",
+        "end": 50749012,
+        "label": "Southern_European",
+        "snpCount": 1803,
+        "source": "flare_hgdp",
+        "start": 44407842
+      },
+      {
+        "confidence": 0.6726,
+        "copy": "2",
+        "end": 16927569,
+        "label": "Southern_European",
+        "snpCount": 47,
+        "source": "flare_hgdp",
+        "start": 16391821
+      },
+      {
+        "confidence": 0.6745,
+        "copy": "2",
+        "end": 19652883,
+        "label": "Southern_European",
+        "snpCount": 520,
+        "source": "flare_hgdp",
+        "start": 16933750
+      },
+      {
+        "confidence": 0.7581,
+        "copy": "2",
+        "end": 21038654,
+        "label": "Southern_European",
+        "snpCount": 276,
+        "source": "flare_hgdp",
+        "start": 19655722
+      },
+      {
+        "confidence": 0.7341,
+        "copy": "2",
+        "end": 32778780,
+        "label": "Southern_European",
+        "snpCount": 2184,
+        "source": "flare_hgdp",
+        "start": 21044065
+      },
+      {
+        "confidence": 0.4729,
+        "copy": "2",
+        "end": 32954955,
+        "label": "Southern_European",
+        "snpCount": 38,
+        "source": "flare_hgdp",
+        "start": 32781206
+      },
+      {
+        "confidence": 0.6757,
+        "copy": "2",
+        "end": 36417156,
+        "label": "Southern_European",
+        "snpCount": 678,
+        "source": "flare_hgdp",
+        "start": 32970066
+      },
+      {
+        "confidence": 0.5976,
+        "copy": "2",
+        "end": 36969311,
+        "label": "Southern_European",
+        "snpCount": 146,
+        "source": "flare_hgdp",
+        "start": 36435659
+      },
+      {
+        "confidence": 0.3886,
+        "copy": "2",
+        "end": 37114032,
+        "label": "Southern_European",
+        "snpCount": 35,
+        "source": "flare_hgdp",
+        "start": 36971887
+      },
+      {
+        "confidence": 0.38,
+        "copy": "2",
+        "end": 37139454,
+        "label": "Southern_European",
+        "snpCount": 8,
+        "source": "flare_hgdp",
+        "start": 37123824
+      },
+      {
+        "confidence": 0.38,
+        "copy": "2",
+        "end": 37147133,
+        "label": "Southern_European",
+        "snpCount": 3,
+        "source": "flare_hgdp",
+        "start": 37143088
+      },
+      {
+        "confidence": 0.6367,
+        "copy": "2",
+        "end": 38423608,
+        "label": "Southern_European",
+        "snpCount": 261,
+        "source": "flare_hgdp",
+        "start": 37148398
+      },
+      {
+        "confidence": 0.438,
+        "copy": "2",
+        "end": 39049549,
+        "label": "Southern_European",
+        "snpCount": 98,
+        "source": "flare_hgdp",
+        "start": 38427890
+      },
+      {
+        "confidence": 0.4127,
+        "copy": "2",
+        "end": 39178119,
+        "label": "Southern_European",
+        "snpCount": 30,
+        "source": "flare_hgdp",
+        "start": 39071798
+      },
+      {
+        "confidence": 0.7062,
+        "copy": "2",
+        "end": 42188912,
+        "label": "Southern_European",
+        "snpCount": 333,
+        "source": "flare_hgdp",
+        "start": 39179216
+      },
+      {
+        "confidence": 0.6503,
+        "copy": "2",
+        "end": 43266462,
+        "label": "Southern_European",
+        "snpCount": 203,
+        "source": "flare_hgdp",
+        "start": 42207808
+      },
+      {
+        "confidence": 0.5699,
+        "copy": "2",
+        "end": 44359083,
+        "label": "Southern_European",
+        "snpCount": 280,
+        "source": "flare_hgdp",
+        "start": 43267728
+      },
+      {
+        "confidence": 0.52,
+        "copy": "2",
+        "end": 44432197,
+        "label": "Southern_European",
+        "snpCount": 38,
+        "source": "flare_hgdp",
+        "start": 44361191
+      },
+      {
+        "confidence": 0.6564,
+        "copy": "2",
+        "end": 46719928,
+        "label": "Southern_European",
+        "snpCount": 597,
+        "source": "flare_hgdp",
+        "start": 44437775
+      },
+      {
+        "confidence": 0.6662,
+        "copy": "2",
+        "end": 47339669,
+        "label": "Southern_European",
+        "snpCount": 141,
+        "source": "flare_hgdp",
+        "start": 46741886
+      },
+      {
+        "confidence": 0.4664,
+        "copy": "2",
+        "end": 48061323,
+        "label": "Southern_European",
+        "snpCount": 181,
+        "source": "flare_hgdp",
+        "start": 47352781
+      },
+      {
+        "confidence": 0.5578,
+        "copy": "2",
+        "end": 48793421,
+        "label": "Southern_European",
+        "snpCount": 270,
+        "source": "flare_hgdp",
+        "start": 48075535
+      },
+      {
+        "confidence": 0.6522,
+        "copy": "2",
+        "end": 50749012,
+        "label": "Southern_European",
+        "snpCount": 606,
+        "source": "flare_hgdp",
+        "start": 48798928
+      }
+    ]
+  },
+  "schemaVersion": 1
+}

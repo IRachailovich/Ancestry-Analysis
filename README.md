@@ -9,7 +9,8 @@ Pipeline and lightweight report app for preparing 23andMe genotype data against 
 - HGDP general/local population labeling
 - 1000 Genomes population labeling
 - EAGLE2 v2.4.1 runner
-- optional HMM smoothing for local ancestry segments
+- FLARE local ancestry runner
+- optional HMM smoothing for FLARE local ancestry segments
 - static report UI that reads generated JSON from `data/`
 
 ## Main Workflow
@@ -26,6 +27,20 @@ After shared-SNP extraction finishes, run EAGLE2:
 ```bash
 cd /mnt/d/Python/Genetics
 SKIP_EXTRACTION=1 RUN_EAGLE=1 THREADS=8 bash run_pipeline_wsl.sh
+```
+
+After EAGLE2, run a chr22 FLARE smoke test:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_FLARE=1 FLARE_CHROMS=22 THREADS=4 FLARE_THREADS=4 FLARE_MEMORY_GB=6 bash run_pipeline_wsl.sh
+```
+
+Then run FLARE across all autosomes:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_FLARE=1 FLARE_CHROMS=all THREADS=8 FLARE_THREADS=4 FLARE_MEMORY_GB=6 bash run_pipeline_wsl.sh
 ```
 
 ## Output Locations
@@ -46,6 +61,7 @@ The chromosome view uses:
 
 ```bash
 data/phasing_qc.json
+data/chromosome_segments_hgdp.json
 ```
 
 ## Documentation

@@ -45,6 +45,10 @@ const fallbackPhasing = {
   datasets: {},
 };
 
+const fallbackSegments = {
+  chromosomes: {},
+};
+
 function applyTheme(theme) {
   const resolved = theme === "dark" ? "dark" : "light";
   document.documentElement.dataset.theme = resolved;
@@ -202,6 +206,52 @@ function renderChromosomes(phasing) {
   }
 }
 
+function labelClass(label) {
+  const colors = ["teal", "coral", "amber", "green", "slate"];
+  let hash = 0;
+  for (const char of label) {
+    hash = (hash + char.charCodeAt(0)) % colors.length;
+  }
+  return colors[hash];
+}
+
+function renderLocalAncestry(segments) {
+  const list = document.querySelector("#ancestryBreakdown");
+  const available = Object.values(segments.chromosomes || {}).flat();
+  if (!available.length) {
+    list.innerHTML = '<p class="empty-state">Local ancestry segments will appear after FLARE runs.</p>';
+    return;
+  }
+
+  const totals = new Map();
+  for (const segment of available) {
+    const label = segment.label || "Unassigned";
+    const length = Math.max(0, Number(segment.end || 0) - Number(segment.start || 0) + 1);
+    totals.set(label, (totals.get(label) || 0) + length);
+  }
+
+  const totalLength = [...totals.values()].reduce((sum, value) => sum + value, 0) || 1;
+  const rows = [...totals.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([label, length]) => {
+      const pct = (length / totalLength) * 100;
+      return `
+        <div class="ancestry-row">
+          <span><i class="swatch ${labelClass(label)}"></i>${label.replaceAll("_", " ")}</span>
+          <div class="bar"><i style="width: ${Math.max(3, pct)}%"></i></div>
+          <strong>${formatPercent(pct)}</strong>
+        </div>
+      `;
+    });
+
+  const chromCount = Object.keys(segments.chromosomes || {}).length;
+  list.innerHTML = `
+    <div class="ancestry-note">${formatNumber(chromCount)} chromosome${chromCount === 1 ? "" : "s"} with FLARE segments</div>
+    ${rows.join("")}
+  `;
+}
+
 function renderQuality(report, quality) {
   const grid = document.querySelector("#qualityGrid");
   grid.innerHTML = "";
@@ -228,15 +278,17 @@ function renderQuality(report, quality) {
 
 async function main() {
   initTheme();
-  const [reportResult, qualityResult, phasingResult] = await Promise.all([
+  const [reportResult, qualityResult, phasingResult, segmentsResult] = await Promise.all([
     loadJson("/data/report_summary.json", fallbackReport),
     loadJson("/data/shared_snp_quality.json", fallbackQuality),
     loadJson("/data/phasing_qc.json", fallbackPhasing),
+    loadJson("/data/chromosome_segments_hgdp.json", fallbackSegments),
   ]);
 
   const report = reportResult.data;
   const quality = qualityResult.data;
   const phasing = phasingResult.data;
+  const segments = segmentsResult.data;
   const live = reportResult.source === "pipeline";
   document.querySelector("#dataStatus").textContent = live
     ? "Using exported pipeline JSON"
@@ -245,6 +297,7 @@ async function main() {
   renderMetrics(report);
   renderDatasets(report);
   renderChromosomes(phasing);
+  renderLocalAncestry(segments);
   renderQuality(report, quality);
 }
 

@@ -10,7 +10,9 @@ Steps:
 4. Align the target VCF coordinates to the reference VCF coordinates by copying `CHROM/POS/REF/ALT` from the matching reference `rsID`.
 5. Write app-facing JSON summaries for the ancestry report UI.
 6. Optionally run EAGLE2 twice: once with HGDP reference plus generalized HGDP labels, once with 1000 Genomes reference.
-7. If `results/segments/raw_segments.tsv` exists, smooth local ancestry calls with an HMM and publish chromosome-painting JSON.
+7. Optionally phase the HGDP reference panel itself with EAGLE2 so FLARE has a phased reference.
+8. Optionally run FLARE for probabilistic local ancestry, using phased target haplotypes and phased reference haplotypes.
+9. Smooth FLARE local ancestry segments with an HMM and publish chromosome-painting JSON.
 
 Run from WSL:
 
@@ -51,12 +53,45 @@ Default EAGLE2 maps:
 - HGDP-aligned data: `/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg38_withX.txt.gz`
 - 1000 Genomes/build 37 data: `/opt/eagle2/Eagle_v2.4.1/tables/genetic_map_hg19_withX.txt.gz`
 
-## HMM Smoothing
+## FLARE Local Ancestry
 
-The smoothing stage is optional and runs after EAGLE2 if this file exists:
+FLARE runs after EAGLE2. EAGLE2 does the phasing; FLARE does the ancestry classification.
+
+The HGDP target phasing step does not phase the HGDP reference VCF itself, so the FLARE path first phases HGDP shared reference VCFs with EAGLE2 non-reference mode:
 
 ```bash
-/mnt/f/data/processed/genetics_eagle/results/segments/raw_segments.tsv
+/mnt/f/data/processed/genetics_eagle/results/phased_reference/hgdp/
+```
+
+Run a chr22 smoke test:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_FLARE=1 FLARE_CHROMS=22 THREADS=4 FLARE_THREADS=4 FLARE_MEMORY_GB=6 bash run_pipeline_wsl.sh
+```
+
+Run all autosomes:
+
+```bash
+cd /mnt/d/Python/Genetics
+SKIP_EXTRACTION=1 RUN_FLARE=1 FLARE_CHROMS=all THREADS=8 FLARE_THREADS=4 FLARE_MEMORY_GB=6 bash run_pipeline_wsl.sh
+```
+
+FLARE inputs and outputs:
+
+- Ref panel labels: `/mnt/f/data/processed/genetics_eagle/metadata/hgdp_flare_ref_panel_general.tsv`
+- FLARE maps: `/mnt/f/data/processed/genetics_eagle/work/flare_maps/`
+- FLARE ancestry VCFs: `/mnt/f/data/processed/genetics_eagle/results/flare/hgdp/`
+- Raw segments: `/mnt/f/data/processed/genetics_eagle/results/segments/raw_segments_hgdp.tsv`
+- Smoothed segments: `/mnt/f/data/processed/genetics_eagle/results/segments/smoothed_segments_hgdp.tsv`
+- App JSON: `/mnt/d/Python/Genetics/data/chromosome_segments_hgdp.json`
+
+## HMM Smoothing
+
+The smoothing stage runs after FLARE. It keeps haplotype copy 1 and copy 2 separate when the input has a `copy` column.
+
+```bash
+/mnt/f/data/processed/genetics_eagle/results/segments/raw_segments_hgdp.tsv
 ```
 
 Required columns:
@@ -68,7 +103,7 @@ chrom	start	end	label
 Recommended optional columns:
 
 ```text
-confidence	snp_count	source
+copy	confidence	snp_count	source
 ```
 
 Alternatively, raw segment rows may include probability columns such as `prob_Western_European`, `prob_Middle_Eastern`, and `prob_South_Asian`; the HMM uses those as emissions.
@@ -76,9 +111,11 @@ Alternatively, raw segment rows may include probability columns such as `prob_We
 Outputs:
 
 ```bash
-/mnt/f/data/processed/genetics_eagle/results/segments/smoothed_segments.tsv
+/mnt/f/data/processed/genetics_eagle/results/segments/smoothed_segments_hgdp.tsv
 /mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments.json
+/mnt/f/data/processed/genetics_eagle/results/app/chromosome_segments_hgdp.json
 /mnt/d/Python/Genetics/data/chromosome_segments.json
+/mnt/d/Python/Genetics/data/chromosome_segments_hgdp.json
 ```
 
 Important outputs:

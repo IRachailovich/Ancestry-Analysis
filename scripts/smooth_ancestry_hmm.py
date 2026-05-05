@@ -83,7 +83,14 @@ def merge_segments(rows: list[dict[str, str]], labels: list[str]) -> list[dict[s
         start = int(row["start"])
         end = int(row["end"])
         confidence = parse_float(row.get("confidence"), 0.85)
-        if merged and merged[-1]["chrom"] == row["chrom"] and merged[-1]["label"] == label and int(merged[-1]["end"]) >= start - 1:
+        copy = row.get("copy", "")
+        if (
+            merged
+            and merged[-1]["chrom"] == row["chrom"]
+            and merged[-1].get("copy", "") == copy
+            and merged[-1]["label"] == label
+            and int(merged[-1]["end"]) >= start - 1
+        ):
             prev = merged[-1]
             prev_len = int(prev["end"]) - int(prev["start"]) + 1
             row_len = end - start + 1
@@ -94,6 +101,7 @@ def merge_segments(rows: list[dict[str, str]], labels: list[str]) -> list[dict[s
         else:
             merged.append({
                 "chrom": row["chrom"],
+                "copy": copy,
                 "start": str(start),
                 "end": str(end),
                 "label": label,
@@ -106,7 +114,7 @@ def merge_segments(rows: list[dict[str, str]], labels: list[str]) -> list[dict[s
 
 def write_tsv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    fields = ["chrom", "start", "end", "label", "confidence", "snp_count", "source"]
+    fields = ["chrom", "copy", "start", "end", "label", "confidence", "snp_count", "source"]
     with path.open("w", newline="") as handle:
         writer = csv.DictWriter(handle, delimiter="\t", fieldnames=fields, lineterminator="\n")
         writer.writeheader()
@@ -117,6 +125,7 @@ def write_json(path: Path, rows: list[dict[str, str]]) -> None:
     by_chrom: dict[str, list[dict[str, object]]] = defaultdict(list)
     for row in rows:
         by_chrom[row["chrom"]].append({
+            "copy": row.get("copy", ""),
             "start": int(row["start"]),
             "end": int(row["end"]),
             "label": row["label"],
@@ -138,16 +147,20 @@ def main() -> None:
     args = parser.parse_args()
 
     rows = read_rows(args.input)
-    by_chrom: dict[str, list[dict[str, str]]] = defaultdict(list)
+    by_group: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     states = sorted({row["label"] for row in rows})
     for row in rows:
-        by_chrom[row["chrom"]].append(row)
+        by_group[(row["chrom"], row.get("copy", ""))].append(row)
 
     smoothed = []
-    for chrom in sorted(by_chrom, key=lambda value: int(value) if value.isdigit() else value):
-        chrom_rows = sorted(by_chrom[chrom], key=lambda row: (int(row["start"]), int(row["end"])))
-        labels = viterbi(chrom_rows, states, args.stay_prob, args.min_prob)
-        smoothed.extend(merge_segments(chrom_rows, labels))
+    def sort_key(group: tuple[str, str]) -> tuple[int, str]:
+        chrom, copy = group
+        return (int(chrom) if chrom.isdigit() else 999, copy)
+
+    for group in sorted(by_group, key=sort_key):
+        group_rows = sorted(by_group[group], key=lambda row: (int(row["start"]), int(row["end"])))
+        labels = viterbi(group_rows, states, args.stay_prob, args.min_prob)
+        smoothed.extend(merge_segments(group_rows, labels))
 
     write_tsv(args.out_tsv, smoothed)
     write_json(args.out_json, smoothed)

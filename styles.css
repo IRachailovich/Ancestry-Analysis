@@ -324,6 +324,48 @@ main {
   background: var(--amber);
 }
 
+.green {
+  background: var(--green);
+}
+
+.slate {
+  background: var(--slate);
+}
+
+.ancestry-breakdown {
+  display: grid;
+  gap: 10px;
+}
+
+.ancestry-note {
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+}
+
+.ancestry-row {
+  align-items: center;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: minmax(120px, 1fr) 1fr 52px;
+}
+
+.ancestry-row span,
+.ancestry-row strong {
+  font-size: 12px;
+}
+
+.ancestry-row span {
+  color: var(--slate);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ancestry-row strong {
+  text-align: right;
+}
+
 .chromosome-stack {
   display: grid;
   gap: 16px;
