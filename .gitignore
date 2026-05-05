@@ -2,3 +2,5 @@ __pycache__/
 *.pyc
 .vercel/
 tmp_report_test/
+
+.vercel
