@@ -1,72 +1,66 @@
-const fallbackReport = {
-  sampleName: "MY_SAMPLE",
-  uiDirection: {
-    primary: "Option 5 consumer-friendly ancestry report",
-    secondary: "Option 2 explore map",
+const fallbackConsole = {
+  status: "data_workflow_reset",
+  rawAadr: {
+    samples: 17629,
+    snps: 1233013,
+    source: "/mnt/f/data/raw/aadr/v54.1_1240K_public.{geno,snp,ind}",
   },
-  extraction: {
-    usable23andmeRsidCalls: null,
-    build: "37",
-  },
-  datasets: [
+  activeStage: "phase_original_aadr",
+  workflowRule: "Original AADR is exported and phased first. Every intersection and every model must consume phased AADR artifacts.",
+  gates: [
     {
-      id: "hgdp",
-      displayName: "HGDP",
-      referenceSampleCount: 0,
-      referenceLabelCount: 0,
-      compatibleSnpCount: 0,
-      compatibleRatePct: null,
-      coordinateMatchRatePct: null,
-      eagleResultFileCount: 0,
-      status: "prepared_for_eagle",
+      name: "1. Export original AADR",
+      status: "script_ready",
+      detail: "Convert original AADR EIGENSTRAT to per-chromosome VCF for EAGLE2. No target sample is used here.",
     },
     {
-      id: "1000genomes",
-      displayName: "1000 Genomes",
-      referenceSampleCount: 0,
-      referenceLabelCount: 0,
-      compatibleSnpCount: 0,
-      compatibleRatePct: null,
-      coordinateMatchRatePct: null,
-      eagleResultFileCount: 0,
-      status: "prepared_for_eagle",
+      name: "2. Phase original AADR",
+      status: "pending_run",
+      detail: "Run EAGLE2 on the exported AADR VCFs. From this point onward, downstream work uses only phased AADR.",
+    },
+    {
+      name: "3. Intersect after phasing",
+      status: "blocked_until_phased",
+      detail: "Build model-specific intersections from phased AADR plus phased/imputed target VCFs.",
+    },
+    {
+      name: "4. Run validated models",
+      status: "not_started",
+      detail: "RFMix, FLARE, qpAdm, ChromoPainter, and kernel models stay empty until corrected intersections exist.",
     },
   ],
-};
-
-const fallbackQuality = {
-  datasets: {
-    hgdp: { totals: {} },
-    "1000genomes": { totals: {} },
-  },
-};
-
-const fallbackPhasing = {
-  datasets: {},
-};
-
-const fallbackSegments = {
-  chromosomes: {},
-};
-
-const fallbackValidation = {
-  accuracy: null,
-  sampleCount: 0,
-};
-
-const fallbackTournament = {
-  winner: null,
-  models: [],
-};
-
-const fallbackValidationDashboard = {
-  holdout: {},
-  tournament: {},
-};
-
-const fallbackSampleModelOutputs = {
-  models: [],
-  metaModel: {},
+  artifacts: [
+    {
+      label: "Data-first script",
+      path: "/mnt/d/Python/Genetics/scripts/aadr_data_first.py",
+    },
+    {
+      label: "AADR phase input",
+      path: "/mnt/f/data/processed/genetics_eagle/work/aadr_original_phase_input/",
+    },
+    {
+      label: "Phased AADR output",
+      path: "/mnt/f/data/processed/genetics_eagle/results/phased_reference/aadr_original/",
+    },
+    {
+      label: "Post-phasing intersections",
+      path: "/mnt/f/data/processed/genetics_eagle/work/intersections/aadr_original_phased/",
+    },
+  ],
+  intersections: [],
+  models: [
+    { name: "RFMix", status: "waiting_for_corrected_intersection", result: "No corrected output displayed." },
+    { name: "FLARE", status: "waiting_for_corrected_intersection", result: "No corrected output displayed." },
+    { name: "qpAdm", status: "waiting_for_corrected_intersection", result: "No corrected output displayed." },
+    { name: "Kernel", status: "waiting_for_corrected_intersection", result: "No corrected output displayed." },
+    { name: "ChromoPainter", status: "waiting_for_corrected_intersection", result: "No corrected output displayed." },
+  ],
+  notes: [
+    "Broad labels mean an initial coarse ancestry state space, for example Arabian_Levantine vs Northwest_North_European vs Southern_European, used only for validation stability. Fine labels come later if they pass validation.",
+    "Balanced references means limiting each label to a comparable number of samples during validation so a large label does not win simply because it has more examples.",
+    "Controlled parameter grid means changing RFMix parameters deliberately and evaluating likelihood/validation error, not accepting defaults as truth.",
+    "The target haplotypes should be evaluated copy by copy; adjacent-window score correlation is exactly the biological signal we want to model."
+  ],
 };
 
 function applyTheme(theme) {
@@ -91,416 +85,392 @@ function initTheme() {
 }
 
 function initTabs() {
+  const setActiveTab = (selected) => {
+    document.body.dataset.activeTab = selected;
+    document.querySelectorAll("[data-tab]").forEach((item) => item.classList.toggle("active", item.dataset.tab === selected));
+    document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
+      panel.classList.toggle("active", panel.dataset.tabPanel === selected);
+    });
+  };
+  const initial = document.querySelector("[data-tab].active")?.dataset.tab || "data";
+  setActiveTab(initial);
   document.querySelectorAll("[data-tab]").forEach((button) => {
     button.addEventListener("click", () => {
-      const selected = button.dataset.tab;
-      document.querySelectorAll("[data-tab]").forEach((item) => item.classList.toggle("active", item.dataset.tab === selected));
-      document.querySelectorAll("[data-tab-panel]").forEach((panel) => {
-        panel.classList.toggle("active", panel.dataset.tabPanel === selected);
-      });
+      setActiveTab(button.dataset.tab);
     });
   });
 }
 
 function formatNumber(value) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return "Pending";
+    return "-";
   }
   return Number(value).toLocaleString();
 }
 
-function formatPercent(value) {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return "Pending";
-  }
-  return `${Number(value).toFixed(1)}%`;
-}
-
-async function loadJson(path, fallback) {
+async function loadConsole() {
   try {
-    const response = await fetch(path);
+    const response = await fetch("/data/data_first_console.json");
     if (!response.ok) {
-      throw new Error(`${response.status} ${response.statusText}`);
+      throw new Error("fallback");
     }
     return { data: await response.json(), source: "pipeline" };
   } catch {
-    return { data: fallback, source: "fallback" };
+    return { data: fallbackConsole, source: "fallback" };
   }
 }
 
-function renderMetrics(report) {
-  document.querySelector("#sampleName").textContent = report.sampleName || "MY_SAMPLE";
-  document.querySelector("#usableCalls").textContent = formatNumber(report.extraction?.usable23andmeRsidCalls);
-  document.querySelector("#datasetCount").textContent = formatNumber(report.datasets?.length ?? 0);
-  document.querySelector("#uiDirection").textContent = "Option 5";
+function statusClass(status) {
+  if (status.includes("ready") || status.includes("complete")) return "success";
+  if (status.includes("blocked") || status.includes("waiting")) return "review";
+  return "";
 }
 
-function renderDatasets(report) {
-  const list = document.querySelector("#datasetList");
-  list.innerHTML = "";
+function render(consoleData, source) {
+  document.querySelector("#dataStatus").textContent = source === "pipeline" ? "Using pipeline console JSON" : "Using reset console";
+  document.querySelector("#workflowRule").textContent = consoleData.workflowRule;
+  document.querySelector("#rawSamples").textContent = formatNumber(consoleData.rawAadr?.samples);
+  document.querySelector("#rawSnps").textContent = formatNumber(consoleData.rawAadr?.snps);
+  document.querySelector("#activeStage").textContent = (consoleData.activeStage || "-").replaceAll("_", " ");
+  document.querySelector("#modelStatus").textContent = "empty until corrected";
 
-  for (const dataset of report.datasets || []) {
-    const rate = dataset.compatibleRatePct ?? 0;
-    const row = document.createElement("div");
-    row.className = "dataset-row";
-    row.innerHTML = `
+  document.querySelector("#dataGates").innerHTML = (consoleData.gates || []).map((gate) => `
+    <div class="dataset-row">
       <div>
-        <div class="dataset-title">${dataset.displayName}</div>
-        <div class="dataset-meta">${formatNumber(dataset.referenceSampleCount)} reference samples · ${formatNumber(dataset.referenceLabelCount)} labels</div>
+        <div class="dataset-title">${gate.name}</div>
+        <div class="dataset-meta">${gate.detail}</div>
       </div>
+      <span class="copy-status ${statusClass(gate.status)}">${gate.status.replaceAll("_", " ")}</span>
+    </div>
+  `).join("");
+
+  document.querySelector("#artifactPaths").innerHTML = (consoleData.artifacts || []).map((artifact) => `
+    <div class="output-row">
       <div>
-        <div class="bar" aria-label="Compatible SNP rate"><i style="width: ${Math.max(4, Math.min(rate, 100))}%"></i></div>
-        <div class="dataset-meta">${formatPercent(dataset.compatibleRatePct)} compatible SNP rate</div>
+        <strong>${artifact.label}</strong>
+        <small>${artifact.path}</small>
       </div>
-      <span class="pill">${dataset.status?.replaceAll("_", " ") || "pending"}</span>
-    `;
-    list.append(row);
+    </div>
+  `).join("");
+
+  const intersections = consoleData.intersections || [];
+  document.querySelector("#intersectionCaches").innerHTML = intersections.length
+    ? intersections.map((cache) => `
+      <article>
+        <span>${cache.name}</span>
+        <strong>${formatNumber(cache.sites)}</strong>
+        <span>${cache.status.replaceAll("_", " ")}</span>
+      </article>
+    `).join("")
+    : '<article><span>No corrected intersections yet</span><strong>0</strong><span>Phase AADR first</span></article>';
+
+  document.querySelector("#modelRuns").innerHTML = (consoleData.models || []).map((model) => `
+    <div class="bridge-row">
+      <div>
+        <strong>${model.name}</strong>
+        <small>${model.result}</small>
+      </div>
+      <span class="copy-status ${statusClass(model.status)}">${model.status.replaceAll("_", " ")}</span>
+    </div>
+  `).join("");
+
+  document.querySelector("#frameworkNotes").innerHTML = `
+    <div class="model-list">
+      ${(consoleData.notes || []).map((note) => `<div class="bridge-row"><div><strong>${note}</strong></div></div>`).join("")}
+    </div>
+  `;
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+}
+
+function slugifyHeading(text, index) {
+  const slug = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  return slug || `section-${index + 1}`;
+}
+
+function formatInlineMarkdown(text) {
+  let html = escapeHtml(text);
+  html = html.replace(/`([^`]+)`/g, "<code>$1</code>");
+  html = html.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  html = html.replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
+  return html;
+}
+
+function renderMarkdownTable(lines) {
+  const rows = lines
+    .filter((line) => line.trim().startsWith("|") && line.trim().endsWith("|"))
+    .map((line) => line.trim().slice(1, -1).split("|").map((cell) => formatInlineMarkdown(cell.trim())));
+  if (rows.length < 2) {
+    return "";
   }
-}
-
-function datasetLabel(dataset) {
-  return dataset === "1000genomes" ? "1000 Genomes" : dataset.toUpperCase();
-}
-
-function chromosomeRow(chrom, stats) {
-  const hets = Number(stats?.heterozygousVariants ?? 0);
-  const phased = Number(stats?.phasedHeterozygousVariants ?? 0);
-  const unphased = Number(stats?.unphasedHeterozygousVariants ?? 0);
-  const rate = Number(stats?.phasedHetRatePct ?? 0);
-  const hap1 = Number(stats?.hap1AltAlleles ?? 0);
-  const hap2 = Number(stats?.hap2AltAlleles ?? 0);
-  const hapTotal = Math.max(hap1 + hap2, 1);
-  const hap1Pct = (hap1 / hapTotal) * 100;
-  const hap2Pct = (hap2 / hapTotal) * 100;
-  const success = hets > 0 && phased === hets && unphased === 0;
-  const status = success ? "success" : "review";
-  const statusText = success ? "phased" : "review";
-
+  const [head, , ...body] = rows;
   return `
-    <div class="chromosome">
-      <span>${chrom}</span>
-      <div class="chromosome-body">
-        <div class="copy-pair" aria-label="Chromosome ${chrom} copy phasing status">
-          <div class="copy-row">
-            <span class="copy-label">copy 1</span>
-            <div class="copy-track"><i class="hap-one" style="width: ${Math.max(4, hap1Pct)}%"></i></div>
-            <span class="copy-status ${status}">${statusText}</span>
-          </div>
-          <div class="copy-row">
-            <span class="copy-label">copy 2</span>
-            <div class="copy-track"><i class="hap-two" style="width: ${Math.max(4, hap2Pct)}%"></i></div>
-            <span class="copy-status ${status}">${statusText}</span>
-          </div>
-        </div>
-        <div class="chromosome-meta">
-          <span>${formatNumber(phased)} / ${formatNumber(hets)} heterozygous sites split into two haplotypes</span>
-          <strong>${formatPercent(rate)}</strong>
-        </div>
-      </div>
+    <div class="book-table-wrap">
+      <table>
+        <thead><tr>${head.map((cell) => `<th>${cell}</th>`).join("")}</tr></thead>
+        <tbody>${body.map((row) => `<tr>${row.map((cell) => `<td>${cell}</td>`).join("")}</tr>`).join("")}</tbody>
+      </table>
     </div>
   `;
 }
 
-function renderChromosomes(phasing) {
-  const stack = document.querySelector("#chromosomeStack");
-  stack.innerHTML = "";
+function markdownToHtml(markdown) {
+  const lines = markdown.split(/\r?\n/);
+  const html = [];
+  let paragraph = [];
+  let list = [];
+  let orderedList = [];
+  let mathBlock = [];
+  let inMath = false;
+  let table = [];
 
-  const datasets = ["hgdp", "1000genomes"].filter((dataset) => phasing.datasets?.[dataset]);
-  if (!datasets.length) {
-    stack.innerHTML = '<p class="empty-state">Phasing QC has not been exported yet.</p>';
-    return;
-  }
-
-  for (const dataset of datasets) {
-    const group = document.createElement("section");
-    group.className = "chromosome-group";
-    const rows = [];
-    for (let chrom = 1; chrom <= 22; chrom += 1) {
-      const stats = phasing.datasets?.[dataset]?.[String(chrom)];
-      if (stats) {
-        rows.push(chromosomeRow(chrom, stats));
-      }
+  const flushParagraph = () => {
+    if (!paragraph.length) {
+      return;
     }
-    const totalHets = rows.length
-      ? Object.values(phasing.datasets?.[dataset] || {}).reduce((sum, row) => sum + Number(row.heterozygousVariants || 0), 0)
-      : 0;
-    group.innerHTML = `
-      <div class="chromosome-group-heading">
-        <div>
-          <strong>${datasetLabel(dataset)}</strong>
-          <span>${formatNumber(totalHets)} heterozygous sites</span>
-        </div>
-        <span class="pill">phased haplotypes</span>
-      </div>
-      ${rows.join("")}
-    `;
-    stack.append(group);
+    html.push(`<p>${formatInlineMarkdown(paragraph.join(" "))}</p>`);
+    paragraph = [];
+  };
+
+  const flushList = () => {
+    if (list.length) {
+      html.push(`<ul>${list.map((item) => `<li>${formatInlineMarkdown(item)}</li>`).join("")}</ul>`);
+      list = [];
+    }
+    if (orderedList.length) {
+      html.push(`<ol>${orderedList.map((item) => `<li>${formatInlineMarkdown(item)}</li>`).join("")}</ol>`);
+      orderedList = [];
+    }
+  };
+
+  const flushTable = () => {
+    if (table.length) {
+      html.push(renderMarkdownTable(table));
+      table = [];
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trimEnd();
+    const trimmed = line.trim();
+
+    if (inMath) {
+      mathBlock.push(line);
+      if (trimmed === "\\]") {
+        html.push(`<div class="math-block">${escapeHtml(mathBlock.join("\n"))}</div>`);
+        mathBlock = [];
+        inMath = false;
+      }
+      continue;
+    }
+
+    if (trimmed === "\\[") {
+      flushParagraph();
+      flushList();
+      flushTable();
+      inMath = true;
+      mathBlock = [line];
+      continue;
+    }
+
+    if (!trimmed) {
+      flushParagraph();
+      flushList();
+      flushTable();
+      continue;
+    }
+
+    if (/^\|.+\|$/.test(trimmed)) {
+      flushParagraph();
+      flushList();
+      table.push(line);
+      continue;
+    }
+
+    flushTable();
+
+    const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      flushList();
+      const level = Math.min(heading[1].length + 1, 6);
+      html.push(`<h${level}>${formatInlineMarkdown(heading[2])}</h${level}>`);
+      continue;
+    }
+
+    const bullet = trimmed.match(/^-\s+(.+)$/);
+    if (bullet) {
+      flushParagraph();
+      orderedList = [];
+      list.push(bullet[1]);
+      continue;
+    }
+
+    const number = trimmed.match(/^\d+\.\s+(.+)$/);
+    if (number) {
+      flushParagraph();
+      list = [];
+      orderedList.push(number[1]);
+      continue;
+    }
+
+    paragraph.push(trimmed);
   }
+
+  flushParagraph();
+  flushList();
+  flushTable();
+  return html.join("");
 }
 
-function labelClass(label) {
-  const colors = ["teal", "coral", "amber", "green", "slate"];
-  let hash = 0;
-  for (const char of label) {
-    hash = (hash + char.charCodeAt(0)) % colors.length;
+function splitBookSections(markdown) {
+  const lines = markdown.split(/\r?\n/);
+  const sections = [];
+  let current = null;
+
+  for (const line of lines) {
+    const match = line.match(/^(#{1,6})\s+(.+)$/);
+    if (match) {
+      if (current) {
+        sections.push(current);
+      }
+      current = {
+        level: match[1].length,
+        title: match[2].trim(),
+        lines: [],
+      };
+      continue;
+    }
+    if (current) {
+      current.lines.push(line);
+    }
   }
-  return colors[hash];
+
+  return sections.map((section, index) => ({
+    ...section,
+    id: slugifyHeading(section.title, index),
+    html: markdownToHtml(section.lines.join("\n")),
+  }));
 }
 
-function renderLocalAncestry(segments) {
-  const list = document.querySelector("#ancestryBreakdown");
-  const available = Object.values(segments.chromosomes || {}).flat();
-  if (!available.length) {
-    list.innerHTML = '<p class="empty-state">Local ancestry segments will appear after FLARE runs.</p>';
+function ensureMathJax() {
+  if (window.MathJax || document.querySelector("#mathjax-script")) {
+    return;
+  }
+  window.MathJax = {
+    tex: { inlineMath: [["\\(", "\\)"]], displayMath: [["\\[", "\\]"]] },
+    svg: { fontCache: "global" },
+  };
+  const script = document.createElement("script");
+  script.id = "mathjax-script";
+  script.async = true;
+  script.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js";
+  document.head.append(script);
+}
+
+async function renderBookReader() {
+  const toc = document.querySelector("#bookToc");
+  const page = document.querySelector("#bookPage");
+  const title = document.querySelector("#bookSectionTitle");
+  const meta = document.querySelector("#bookSectionMeta");
+  const indicator = document.querySelector("#bookPageIndicator");
+  const previous = document.querySelector("#bookPrev");
+  const next = document.querySelector("#bookNext");
+  if (!toc || !page || !title || !meta || !indicator || !previous || !next) {
     return;
   }
 
-  const totals = new Map();
-  for (const segment of available) {
-    const label = segment.label || "Unassigned";
-    const length = Math.max(0, Number(segment.end || 0) - Number(segment.start || 0) + 1);
-    totals.set(label, (totals.get(label) || 0) + length);
-  }
+  let sections = [];
+  let activeIndex = 0;
 
-  const totalLength = [...totals.values()].reduce((sum, value) => sum + value, 0) || 1;
-  const rows = [...totals.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 6)
-    .map(([label, length]) => {
-      const pct = (length / totalLength) * 100;
-      return `
-        <div class="ancestry-row">
-          <span><i class="swatch ${labelClass(label)}"></i>${label.replaceAll("_", " ")}</span>
-          <div class="bar"><i style="width: ${Math.max(3, pct)}%"></i></div>
-          <strong>${formatPercent(pct)}</strong>
-        </div>
-      `;
+  const sectionOutlineHtml = (index) => {
+    const section = sections[index];
+    const children = sections
+      .slice(index + 1)
+      .filter((candidate) => candidate.level > section.level)
+      .filter((candidate, candidateIndex, allChildren) => {
+        const originalIndex = sections.indexOf(candidate);
+        const nextPeer = sections.slice(index + 1, originalIndex).some((prior) => prior.level <= section.level);
+        return !nextPeer && allChildren.indexOf(candidate) === candidateIndex;
+      });
+
+    if (!children.length) {
+      return '<p class="empty-state">This section is a divider for the next part of the book.</p>';
+    }
+
+    return `
+      <p class="book-chapter-note">This chapter contains these sections:</p>
+      <ul>
+        ${children.map((child) => `<li>${formatInlineMarkdown(child.title)}</li>`).join("")}
+      </ul>
+    `;
+  };
+
+  const showSection = (index) => {
+    activeIndex = Math.max(0, Math.min(index, sections.length - 1));
+    const section = sections[activeIndex];
+    title.textContent = section.title;
+    meta.textContent = `Section ${activeIndex + 1} of ${sections.length}`;
+    page.innerHTML = section.html || sectionOutlineHtml(activeIndex);
+    indicator.textContent = `${activeIndex + 1} / ${sections.length}`;
+    previous.disabled = activeIndex === 0;
+    next.disabled = activeIndex === sections.length - 1;
+    toc.querySelectorAll("button").forEach((button, buttonIndex) => {
+      button.classList.toggle("active", buttonIndex === activeIndex);
     });
+    page.scrollTop = 0;
+    if (window.MathJax?.typesetPromise) {
+      window.MathJax.typesetPromise([page]).catch(() => {});
+    }
+  };
 
-  const chromCount = Object.keys(segments.chromosomes || {}).length;
-  const profile = segments.smoothingProfile?.replaceAll("_", " ") || "raw/no HMM";
-  list.innerHTML = `
-    <div class="ancestry-note">${formatNumber(chromCount)} chromosome${chromCount === 1 ? "" : "s"} with FLARE segments · ${profile}</div>
-    ${rows.join("")}
-  `;
-}
-
-function renderQuality(report, quality, validation) {
-  const grid = document.querySelector("#qualityGrid");
-  grid.innerHTML = "";
-
-  for (const dataset of report.datasets || []) {
-    const totals = quality.datasets?.[dataset.id]?.totals || {};
-    const article = document.createElement("article");
-    article.innerHTML = `
-      <span>${dataset.displayName}</span>
-      <strong>${formatNumber(totals.compatibleBiallelicSnpCount ?? dataset.compatibleSnpCount)}</strong>
-      <span>${formatPercent(totals.coordinateMatchRatePct ?? dataset.coordinateMatchRatePct)} coordinate match</span>
-    `;
-    grid.append(article);
+  try {
+    const response = await fetch("/docs/ancestry_models_book.md");
+    if (!response.ok) {
+      throw new Error(`${response.status} ${response.statusText}`);
+    }
+    const markdown = await response.text();
+    sections = splitBookSections(markdown);
+    toc.innerHTML = sections.map((section, index) => `
+      <button class="book-toc-item depth-${Math.min(section.level, 4)}" type="button" data-book-index="${index}">
+        ${formatInlineMarkdown(section.title)}
+      </button>
+    `).join("");
+    toc.querySelectorAll("button").forEach((button) => {
+      button.addEventListener("click", () => showSection(Number(button.dataset.bookIndex)));
+    });
+    previous.addEventListener("click", () => showSection(activeIndex - 1));
+    next.addEventListener("click", () => showSection(activeIndex + 1));
+    ensureMathJax();
+    showSection(0);
+  } catch (error) {
+    title.textContent = "Ancestry Models";
+    meta.textContent = "Reader unavailable";
+    page.innerHTML = `<p class="empty-state">Could not load the manuscript: ${escapeHtml(error.message)}</p>`;
+    indicator.textContent = "-";
+    previous.disabled = true;
+    next.disabled = true;
   }
-
-  const extraction = document.createElement("article");
-  extraction.innerHTML = `
-    <span>Raw build</span>
-    <strong>${report.extraction?.build || "Pending"}</strong>
-    <span>Detected from extraction log</span>
-  `;
-  grid.append(extraction);
-
-  const validator = document.createElement("article");
-  validator.innerHTML = `
-    <span>HGDP holdout validation</span>
-    <strong>${validation.accuracy === null || validation.accuracy === undefined ? "Pending" : formatPercent(Number(validation.accuracy) * 100)}</strong>
-    <span>${formatNumber(validation.sampleCount || 0)} known samples, chr22</span>
-  `;
-  grid.append(validator);
-}
-
-function renderTournament(tournament) {
-  const list = document.querySelector("#modelTournament");
-  if (!list) {
-    return;
-  }
-  const models = tournament.models || [];
-  if (!models.length) {
-    list.innerHTML = '<p class="empty-state">Model tournament results will appear after validation runs.</p>';
-    return;
-  }
-  list.innerHTML = models.slice(0, 5).map((model, index) => `
-    <div class="model-row">
-      <span>${index + 1}</span>
-      <div>
-        <strong>${model.modelName.replaceAll("_", " ")}</strong>
-        <small>${formatPercent(Number(model.accuracy || 0) * 100)} · ${formatNumber(model.trackedBridgeErrors || 0)} tracked bridge errors</small>
-      </div>
-      <span class="pill">${model.modelName === tournament.winner ? "winner" : "tested"}</span>
-    </div>
-  `).join("");
-}
-
-function renderValidationDetails(dashboard) {
-  const box = document.querySelector("#validationDetails");
-  const holdout = dashboard.holdout || {};
-  const bridge = holdout.bridgeErrors || {};
-  const pairs = bridge.pairs || {};
-  const errors = holdout.errors || [];
-  const southern = holdout.southernEuropeanAttractorErrors || [];
-  const independent = dashboard.independentModels || [];
-  const synthetic = dashboard.syntheticValidation?.rfmixDefaultStrict;
-  const gridModels = dashboard.parameterGrid?.models || [];
-  box.innerHTML = `
-    <div class="quality-grid">
-      <article><span>Holdout accuracy</span><strong>${formatPercent(Number(holdout.accuracy || 0) * 100)}</strong><span>${formatNumber(holdout.sampleCount || 0)} known samples</span></article>
-      <article><span>Total errors</span><strong>${formatNumber(holdout.errorCount || errors.length)}</strong><span>chr22 validation</span></article>
-      <article><span>Southern attractor</span><strong>${formatNumber(southern.length)}</strong><span>non-Southern labels called Southern</span></article>
-    </div>
-    <div class="model-list">
-      ${Object.entries(pairs).map(([pair, count]) => `
-        <div class="bridge-row"><div><strong>${pair.replaceAll("_", " ")}</strong><small>tracked bridge pair</small></div><strong>${formatNumber(count)}</strong></div>
-      `).join("")}
-    </div>
-    <div class="model-list">
-      ${independent.map((model) => `
-        <div class="bridge-row">
-          <div><strong>${model.displayName}</strong><small>${(model.status || "pending").replaceAll("_", " ")}</small></div>
-          <strong>${model.accuracy === null || model.accuracy === undefined ? "Pending" : formatPercent(Number(model.accuracy) * 100)}</strong>
-        </div>
-      `).join("")}
-      ${synthetic ? `
-        <div class="bridge-row">
-          <div><strong>RFMix synthetic mixtures</strong><small>${synthetic.status.replaceAll("_", " ")}</small></div>
-          <strong>${Number(synthetic.meanMixtureAbsError).toFixed(3)}</strong>
-        </div>
-      ` : ""}
-      ${gridModels.map((model) => `
-        <div class="bridge-row">
-          <div><strong>${model.preset.replaceAll("_", " ")}</strong><small>RFMix parameter check · ${formatNumber(model.trackedBridgeErrors)} bridge errors</small></div>
-          <strong>${model.accuracy === null || model.accuracy === undefined ? Number(model.meanMixtureAbsError).toFixed(3) : formatPercent(Number(model.accuracy) * 100)}</strong>
-        </div>
-      `).join("")}
-    </div>
-    <div class="model-list">
-      ${errors.slice(0, 8).map((row) => `
-        <div class="bridge-row">
-          <div><strong>${row.trueLabel.replaceAll("_", " ")} -> ${row.predictedLabel.replaceAll("_", " ")}</strong><small>${row.sample}</small></div>
-          <strong>${formatPercent(Number(row.topProbability || 0) * 100)}</strong>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function renderSampleModelOutputs(outputs) {
-  const list = document.querySelector("#sampleModelOutputs");
-  const copies = document.querySelector("#copyDiagnostics");
-  const models = outputs.models || [];
-  const meta = outputs.metaModel || {};
-  if (!models.length) {
-    list.innerHTML = '<p class="empty-state">Sample model outputs will appear after model runs.</p>';
-    copies.innerHTML = '<p class="empty-state">Copy-specific diagnostics will appear after model runs.</p>';
-    return;
-  }
-  const metaHtml = `
-    <div class="output-row meta-output">
-      <div>
-        <strong>Meta-model</strong>
-        <small>${(meta.status || "provisional").replaceAll("_", " ")}</small>
-      </div>
-      <div>
-        ${(meta.topConsensus || []).slice(0, 5).map((item) => `
-          <div class="ancestry-row">
-            <span><i class="swatch ${labelClass(item.label)}"></i>${item.label.replaceAll("_", " ")}</span>
-            <div class="bar"><i style="width: ${Math.max(3, Number(item.probability || 0))}%"></i></div>
-            <strong>${formatPercent(item.probability)}</strong>
-          </div>
-        `).join("")}
-        <div class="ancestry-note">${meta.labelPolicy?.reason || "Final labels require validation."}</div>
-      </div>
-    </div>
-  `;
-  list.innerHTML = metaHtml + models.map((model) => `
-    <div class="output-row">
-      <div><strong>${model.displayName}</strong><small>${model.id.replaceAll("_", " ")}</small></div>
-      <div>
-        ${(model.globalTop || []).slice(0, 5).map((item) => `
-          <div class="ancestry-row">
-            <span><i class="swatch ${labelClass(item.label)}"></i>${item.label.replaceAll("_", " ")}</span>
-            <div class="bar"><i style="width: ${Math.max(3, Number(item.probability || 0))}%"></i></div>
-            <strong>${formatPercent(item.probability)}</strong>
-          </div>
-        `).join("")}
-      </div>
-    </div>
-  `).join("");
-
-  copies.innerHTML = models.map((model) => `
-    <div class="output-row">
-      <div><strong>${model.displayName}</strong><small>copy-specific chr22 proportions</small></div>
-      <div>
-        ${Object.entries(model.segments?.perCopy || {}).map(([copy, labels]) => {
-          const top = Object.entries(labels).slice(0, 4);
-          return `<div class="ancestry-note">copy ${copy}: ${top.map(([label, pct]) => `${label.replaceAll("_", " ")} ${formatPercent(pct)}`).join(" · ")}</div>`;
-        }).join("")}
-      </div>
-    </div>
-  `).join("");
 }
 
 async function main() {
   initTheme();
   initTabs();
-  const [
-    reportResult,
-    qualityResult,
-    phasingResult,
-    segmentsResult,
-    validationResult,
-    tournamentResult,
-    validationDashboardResult,
-    sampleModelOutputsResult,
-  ] = await Promise.all([
-    loadJson("/data/report_summary.json", fallbackReport),
-    loadJson("/data/shared_snp_quality.json", fallbackQuality),
-    loadJson("/data/phasing_qc.json", fallbackPhasing),
-    loadJson("/data/chromosome_segments_hgdp.json", fallbackSegments),
-    loadJson("/data/validation_hgdp_chr22.json", fallbackValidation),
-    loadJson("/data/model_tournament_hgdp_chr22.json", fallbackTournament),
-    loadJson("/data/validation_dashboard.json", fallbackValidationDashboard),
-    loadJson("/data/sample_model_outputs.json", fallbackSampleModelOutputs),
-  ]);
-
-  const report = reportResult.data;
-  const quality = qualityResult.data;
-  const phasing = phasingResult.data;
-  const segments = segmentsResult.data;
-  const validation = validationResult.data;
-  const tournament = tournamentResult.data;
-  const validationDashboard = validationDashboardResult.data;
-  const sampleModelOutputs = sampleModelOutputsResult.data;
-  const live = reportResult.source === "pipeline";
-  document.querySelector("#dataStatus").textContent = live
-    ? "Using exported pipeline JSON"
-    : "Using deploy preview shell";
-
-  renderMetrics(report);
-  renderDatasets(report);
-  renderChromosomes(phasing);
-  renderLocalAncestry(segments);
-  renderQuality(report, quality, validation);
-  renderTournament(tournament);
-  renderValidationDetails(validationDashboard);
-  renderSampleModelOutputs(sampleModelOutputs);
+  const { data, source } = await loadConsole();
+  render(data, source);
+  renderBookReader();
 }
 
 main().catch((error) => {
   console.error(error);
-  const status = document.querySelector("#dataStatus");
-  const chromosomes = document.querySelector("#chromosomeStack");
-  if (status) {
-    status.textContent = "App render error";
-  }
-  if (chromosomes) {
-    chromosomes.innerHTML = `<p class="empty-state">${error.message}</p>`;
-  }
+  document.querySelector("#dataStatus").textContent = "App render error";
 });

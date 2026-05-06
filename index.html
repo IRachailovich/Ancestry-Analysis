@@ -3,107 +3,116 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Genetic Ancestry Report</title>
+    <title>AADR Data Console</title>
     <link rel="stylesheet" href="/styles.css">
   </head>
   <body>
     <header class="topbar">
       <div>
-        <p class="eyebrow">Genetic ancestry analysis</p>
-        <h1>Personal ancestry report</h1>
+        <p class="eyebrow">Data-first ancestry workflow</p>
+        <h1>AADR phased-data console</h1>
       </div>
       <nav class="tab-nav" aria-label="Main views">
-        <button class="tab-button active" type="button" data-tab="report">Report</button>
-        <button class="tab-button" type="button" data-tab="sample">Sample models</button>
-        <button class="tab-button" type="button" data-tab="validation">Validation</button>
-        <button class="tab-button" type="button" data-tab="quality">Quality</button>
+        <button class="tab-button active" type="button" data-tab="data">Data</button>
+        <button class="tab-button" type="button" data-tab="models">Models</button>
+        <button class="tab-button" type="button" data-tab="notes">Notes</button>
+        <button class="tab-button" type="button" data-tab="book">Ancestry Book</button>
         <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch color theme">Dark</button>
       </nav>
     </header>
 
     <main>
-      <section class="tab-panel active" data-tab-panel="report">
-        <section class="summary" id="report">
-          <div class="summary-copy">
-            <p class="eyebrow">Option 5 direction</p>
-            <h2>Personal ancestry report, with the analysis details still close at hand.</h2>
-            <p>
-              This report uses Option 5 as the main experience: clear ancestry results,
-              phased chromosomes, reference-set quality, and room for probabilistic ancestry calls.
-            </p>
-          </div>
-          <div class="status-panel" aria-live="polite">
-            <span class="status-dot"></span>
-            <span id="dataStatus">Loading report data</span>
-          </div>
-        </section>
-
-        <section class="metrics" aria-label="Report summary metrics">
-          <article><span>Sample</span><strong id="sampleName">-</strong></article>
-          <article><span>23andMe rsID calls</span><strong id="usableCalls">-</strong></article>
-          <article><span>Reference sets</span><strong id="datasetCount">-</strong></article>
-          <article><span>Primary UI</span><strong id="uiDirection">-</strong></article>
-        </section>
-
-        <section class="layout-grid">
-          <article class="panel span-7">
-            <div class="panel-heading"><div><p class="eyebrow">Reference readiness</p><h3>Pipeline datasets</h3></div></div>
-            <div class="dataset-list" id="datasetList"></div>
-          </article>
-
-          <article class="panel span-5" id="map">
-            <div class="panel-heading"><div><p class="eyebrow">Option 2 as a tab</p><h3>Explore map</h3></div></div>
-            <div class="map-shell">
-              <div class="arc arc-one"></div><div class="arc arc-two"></div>
-              <span class="pin pin-a"></span><span class="pin pin-b"></span><span class="pin pin-c"></span>
-            </div>
-          </article>
-        </section>
+      <section class="summary">
+        <div class="summary-copy">
+          <p class="eyebrow">Current rule</p>
+          <h2>Phase original AADR first. Intersections come after phasing. Models come last.</h2>
+          <p id="workflowRule">
+            The app now shows only the active data workflow and future corrected outputs.
+          </p>
+        </div>
+        <div class="status-panel" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="dataStatus">Loading data console</span>
+        </div>
       </section>
 
-      <section class="tab-panel" data-tab-panel="sample">
+      <section class="metrics" aria-label="Data workflow metrics">
+        <article><span>Raw AADR samples</span><strong id="rawSamples">-</strong></article>
+        <article><span>AADR SNPs</span><strong id="rawSnps">-</strong></article>
+        <article><span>Active stage</span><strong id="activeStage">-</strong></article>
+        <article><span>Model outputs</span><strong id="modelStatus">-</strong></article>
+      </section>
+
+      <section class="tab-panel active" data-tab-panel="data">
         <section class="layout-grid">
-          <article class="panel span-5">
-            <div class="panel-heading"><div><p class="eyebrow">Current sample</p><h3>Model output summary</h3></div></div>
-            <div class="ancestry-breakdown" id="ancestryBreakdown"></div>
-          </article>
           <article class="panel span-7">
-            <div class="panel-heading"><div><p class="eyebrow">Probabilistic models</p><h3>Sample model comparison</h3></div></div>
-            <div class="model-output-list" id="sampleModelOutputs"></div>
+            <div class="panel-heading">
+              <div><p class="eyebrow">Required order</p><h3>Data gates</h3></div>
+            </div>
+            <div class="dataset-list" id="dataGates"></div>
+          </article>
+
+          <article class="panel span-5">
+            <div class="panel-heading">
+              <div><p class="eyebrow">Artifacts</p><h3>Active paths</h3></div>
+            </div>
+            <div class="model-output-list" id="artifactPaths"></div>
           </article>
         </section>
 
         <section class="panel">
-          <div class="panel-heading"><div><p class="eyebrow">Per chromosome and copy</p><h3>Haplotype-copy diagnostics</h3></div></div>
-          <div class="copy-diagnostics" id="copyDiagnostics"></div>
-        </section>
-
-        <section class="panel" id="chromosomes">
-          <div class="panel-heading"><div><p class="eyebrow">Chromosome view</p><h3>Phased autosomes</h3></div></div>
-          <div class="chromosome-stack" id="chromosomeStack"></div>
+          <div class="panel-heading">
+            <div><p class="eyebrow">Intersections</p><h3>Phased-AADR derived caches</h3></div>
+          </div>
+          <div class="quality-grid" id="intersectionCaches"></div>
         </section>
       </section>
 
-      <section class="tab-panel" data-tab-panel="validation">
-        <section class="layout-grid">
-          <article class="panel span-5">
-            <div class="panel-heading"><div><p class="eyebrow">Holdout validation</p><h3>Bridge errors</h3></div></div>
-            <div class="validation-details" id="validationDetails"></div>
+      <section class="tab-panel" data-tab-panel="models">
+        <section class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Corrected outputs only</p><h3>Model run status</h3></div>
+          </div>
+          <div class="model-list" id="modelRuns"></div>
+        </section>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="notes">
+        <section class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Design notes</p><h3>Mathematical framework</h3></div>
+          </div>
+          <div class="validation-details" id="frameworkNotes"></div>
+        </section>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="book">
+        <section class="book-shell" aria-label="Mathematical ancestry models book">
+          <aside class="book-sidebar" aria-label="Book contents">
+            <div class="book-sidebar-heading">
+              <p class="eyebrow">Reader</p>
+              <h3>Contents</h3>
+            </div>
+            <nav class="book-toc" id="bookToc"></nav>
+          </aside>
+          <article class="book-reader" aria-live="polite">
+            <div class="book-reader-top">
+              <div>
+                <p class="eyebrow" id="bookSectionMeta">Loading</p>
+                <h2 id="bookSectionTitle">Ancestry Models</h2>
+              </div>
+            </div>
+            <div class="book-page" id="bookPage">
+              <p class="empty-state">Loading the manuscript.</p>
+            </div>
+            <footer class="book-pager" aria-label="Section navigation">
+              <button class="book-page-button" id="bookPrev" type="button" aria-label="Previous section">←</button>
+              <span id="bookPageIndicator">-</span>
+              <button class="book-page-button" id="bookNext" type="button" aria-label="Next section">→</button>
+            </footer>
           </article>
-          <article class="panel span-7">
-            <div class="panel-heading"><div><p class="eyebrow">Model validation</p><h3>Model tournament</h3></div></div>
-            <div class="model-list" id="modelTournament"></div>
-          </article>
         </section>
       </section>
-
-      <section class="tab-panel" data-tab-panel="quality">
-        <section class="panel" id="quality">
-          <div class="panel-heading"><div><p class="eyebrow">Analysis quality</p><h3>Shared SNP compatibility</h3></div></div>
-          <div class="quality-grid" id="qualityGrid"></div>
-        </section>
-      </section>
-
     </main>
 
     <script src="/app.js" type="module"></script>
